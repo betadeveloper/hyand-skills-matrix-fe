@@ -4,4 +4,5 @@ export enum Endpoint {
   CAREER = 'career',
   FEEDBACK = 'feedback',
   WIKI = 'wiki',
+  PROFILE = 'profile',
 }

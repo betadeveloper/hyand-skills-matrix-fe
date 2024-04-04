@@ -6,3 +6,7 @@
 .content {
   margin-left: 150px;
 }
+
+*:focus {
+  outline: none !important;
+}

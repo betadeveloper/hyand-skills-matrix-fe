@@ -6,10 +6,10 @@ const theme = createTheme({
       default: '#FAFBFD',
     },
     primary: {
-      main: '#FAFBFD',
+      main: '#0092E1',
     },
     secondary: {
-      main: '#0092E1',
+      main: '#03C48D',
     },
   },
   typography: {

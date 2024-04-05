@@ -6,6 +6,11 @@ import NotFound from '../components/not-found/NotFound';
 import NavigationBar from '../components/navigation-bar/NavigationBar';
 import { Endpoint } from './endpoint';
 import MainPage from '../pages/main-page/MainPage';
+import Profile from '../pages/profile/Profile';
+import Statistics from '../pages/statistics/Statistics';
+import Career from '../pages/career/Career';
+import Feedback from '../pages/feedback/Feedback';
+import Wiki from '../pages/wiki/Wiki';
 
 type MyErrorBoundaryProps = {
   children: React.ReactNode;
@@ -50,21 +55,26 @@ const routeOptions: RouteObject[] = [
         path: Endpoint.MAIN_PAGE,
         element: <MainPage />,
       },
-      // {
-      //   path: Endpoint.ADD_SPRINT,
-      //   element: (
-      //     <ProtectedRoute path={Endpoint.ADD_SPRINT} element={<AddSprint />} />
-      //   ),
-      // },
-      // {
-      //   path: Endpoint.MANAGE_TEAM,
-      //   element: (
-      //     <ProtectedRoute
-      //       path={Endpoint.MANAGE_TEAM}
-      //       element={<ManageTeam />}
-      //     />
-      //   ),
-      // },
+      {
+        path: Endpoint.STATISTICS,
+        element: <Statistics />,
+      },
+      {
+        path: Endpoint.CAREER,
+        element: <Career />,
+      },
+      {
+        path: Endpoint.FEEDBACK,
+        element: <Feedback />,
+      },
+      {
+        path: Endpoint.WIKI,
+        element: <Wiki />,
+      },
+      {
+        path: Endpoint.PROFILE,
+        element: <Profile />,
+      },
     ],
   },
   // {

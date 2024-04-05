@@ -19,14 +19,14 @@ export default function InformationCard({ IconComponent, title, buttonText }: In
       <Card variant="outlined">
         <CardContent>
           <Box display="flex" alignItems="center" gap={1}>
-            <IconComponent color="secondary" />
+            <IconComponent color="primary" />
             <Typography variant="h5" fontWeight={'Bold'}>
               {title}
             </Typography>
           </Box>
         </CardContent>
         <CardActions>
-          <Button size="small" color="secondary">
+          <Button size="small" color="primary">
             {buttonText}
           </Button>
         </CardActions>

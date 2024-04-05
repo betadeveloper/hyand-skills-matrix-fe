@@ -1,10 +1,10 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import * as React from 'react';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
-import MenuIcon from '@mui/icons-material/Menu';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
@@ -14,11 +14,21 @@ import { Endpoint } from '../../routes/endpoint';
 import { Link } from 'react-router-dom';
 import { InsertComment, AssignmentInd, Home, Analytics, AutoStories } from '@mui/icons-material/';
 import HyandLogo from '../../assets/images/hyand-logo.gif';
+import TypeSearch from '../search/Search';
 
 export default function NavigationBar() {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [drawerOpen, setDrawerOpen] = React.useState(false);
   const [selectedNavItem, setSelectedNavItem] = React.useState<string>('Home');
+  const [loggedInUser, setLoggedInUser] = React.useState<string>('');
+
+  React.useEffect(() => {
+    fetch('http://localhost:8080/api/employees')
+      .then((response) => response.json())
+      .then((data) => {
+        setLoggedInUser(data[0].firstName + ' ' + data[0].lastName);
+      });
+  });
 
   const navItems = [
     { to: Endpoint.MAIN_PAGE, icon: <Home sx={{ color: 'black' }} />, text: 'Home' },
@@ -36,10 +46,6 @@ export default function NavigationBar() {
     setAnchorEl(null);
   };
 
-  const handleDrawerOpen = () => {
-    setDrawerOpen(true);
-  };
-
   const handleDrawerClose = () => {
     setDrawerOpen(false);
   };
@@ -51,28 +57,8 @@ export default function NavigationBar() {
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">
-        <Toolbar>
-          <IconButton
-            size="large"
-            edge="start"
-            color="inherit"
-            aria-label="menu"
-            sx={{ mr: 2 }}
-            onClick={handleDrawerOpen}
-          >
-            <MenuIcon />
-          </IconButton>
+        <Toolbar sx={{ display: 'flex', justifyContent: 'space-between', bgcolor: '#ffffff' }}>
           <div>
-            <IconButton
-              size="large"
-              aria-label="account of current user"
-              aria-controls="menu-appbar"
-              aria-haspopup="true"
-              onClick={handleMenu}
-              color="inherit"
-            >
-              <AccountCircle />
-            </IconButton>
             <Menu
               id="menu-appbar"
               anchorEl={anchorEl}
@@ -88,10 +74,27 @@ export default function NavigationBar() {
               open={Boolean(anchorEl)}
               onClose={handleCloseMenu}
             >
-              <MenuItem onClick={handleCloseMenu}>Profile</MenuItem>
-              <MenuItem onClick={handleCloseMenu}>My account</MenuItem>
+              <MenuItem component={Link} to={Endpoint.PROFILE} onClick={handleCloseMenu}>
+                Profile
+              </MenuItem>
+              <MenuItem onClick={handleCloseMenu}>Log out</MenuItem>
             </Menu>
+            <TypeSearch />
           </div>
+          <IconButton
+            size="large"
+            aria-label="account of current user"
+            aria-controls="menu-appbar"
+            aria-haspopup="true"
+            onClick={handleMenu}
+            color="primary"
+          >
+            <AccountCircle />
+            <Typography fontWeight={'bold'} marginLeft={1}>
+              {' '}
+              {loggedInUser}
+            </Typography>
+          </IconButton>
         </Toolbar>
       </AppBar>
       <Drawer
@@ -114,12 +117,15 @@ export default function NavigationBar() {
             justifyContent: 'center',
             flexDirection: 'column',
             gap: 1,
-            marginBottom: 4,
-            marginTop: 4,
+            marginBottom: 3,
+            marginTop: 3,
           }}
+          component={Link}
+          to={Endpoint.MAIN_PAGE}
+          onClick={setSelectedNavItem.bind(null, 'Home')}
         >
           <img src={HyandLogo} alt="Hyand Logo" />
-          <Typography variant="h4" fontWeight={'bold'} color="secondary" textAlign={'center'}>
+          <Typography variant="h4" fontWeight={'bold'} color="primary" textAlign={'center'}>
             Skills Matrix
           </Typography>
         </Box>

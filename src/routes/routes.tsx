@@ -11,6 +11,10 @@ import Statistics from '../pages/statistics/Statistics';
 import Career from '../pages/career/Career';
 import Feedback from '../pages/feedback/Feedback';
 import Wiki from '../pages/wiki/Wiki';
+import Register from '../pages/register/Register';
+import Login from '../pages/login/LogIn';
+import ProtectedRoute from './ProtectedRoute.tsx';
+import Goals from '../pages/goals/Goals.tsx';
 
 type MyErrorBoundaryProps = {
   children: React.ReactNode;
@@ -40,6 +44,14 @@ class MyErrorBoundary extends Component<MyErrorBoundaryProps> {
 
 const routeOptions: RouteObject[] = [
   {
+    path: Endpoint.LOGIN,
+    element: <Login />,
+  },
+  {
+    path: Endpoint.REGISTER,
+    element: <Register />,
+  },
+  {
     element: (
       <>
         <NavigationBar />
@@ -53,38 +65,36 @@ const routeOptions: RouteObject[] = [
     children: [
       {
         path: Endpoint.MAIN_PAGE,
-        element: <MainPage />,
+        element: (
+          <ProtectedRoute path={Endpoint.MAIN_PAGE} element={<MainPage />} />
+        ),
       },
       {
         path: Endpoint.STATISTICS,
-        element: <Statistics />,
+        element: <ProtectedRoute path={Endpoint.STATISTICS} element={<Statistics />} />,
       },
       {
         path: Endpoint.CAREER,
-        element: <Career />,
+        element: <ProtectedRoute path={Endpoint.CAREER} element={<Career />} />,
       },
       {
         path: Endpoint.FEEDBACK,
-        element: <Feedback />,
+        element: <ProtectedRoute path={Endpoint.FEEDBACK} element={<Feedback />} />,
       },
       {
         path: Endpoint.WIKI,
-        element: <Wiki />,
+        element: <ProtectedRoute path={Endpoint.WIKI} element={<Wiki />} />,
       },
       {
         path: Endpoint.PROFILE,
-        element: <Profile />,
+        element: <ProtectedRoute path={Endpoint.PROFILE} element={<Profile />} />,
       },
+      {
+        path: Endpoint.GOALS,
+        element: <ProtectedRoute path={Endpoint.GOALS} element={<Goals />} />,
+      }
     ],
   },
-  // {
-  //   path: Endpoint.LOGIN,
-  //   element: <Login />,
-  // },
-  // {
-  //   path: Endpoint.REGISTER,
-  //   element: <Register />,
-  // },
   {
     path: '*',
     element: <NotFound />,

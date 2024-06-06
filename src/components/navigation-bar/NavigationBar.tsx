@@ -16,6 +16,8 @@ import { InsertComment, AssignmentInd, Home, Analytics, AutoStories } from '@mui
 import HyandLogo from '../../assets/images/hyand-logo.gif';
 import TypeSearch from '../search/Search';
 
+import { get } from '../../api/api.ts';
+
 export default function NavigationBar() {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [drawerOpen, setDrawerOpen] = React.useState(false);
@@ -23,10 +25,9 @@ export default function NavigationBar() {
   const [loggedInUser, setLoggedInUser] = React.useState<string>('');
 
   React.useEffect(() => {
-    fetch('http://localhost:8080/api/employees')
-      .then((response) => response.json())
-      .then((data) => {
-        setLoggedInUser(data[0].firstName + ' ' + data[0].lastName);
+    get('http://localhost:8080/api/employee/current')
+      .then((response) => {
+        setLoggedInUser(`${response.firstName} ${response.lastName}`);
       });
   });
 
@@ -44,6 +45,11 @@ export default function NavigationBar() {
 
   const handleCloseMenu = () => {
     setAnchorEl(null);
+  };
+
+  const handleLogOut = () => {
+    localStorage.removeItem('token');
+    window.location.href = '/register';
   };
 
   const handleDrawerClose = () => {
@@ -77,7 +83,7 @@ export default function NavigationBar() {
               <MenuItem component={Link} to={Endpoint.PROFILE} onClick={handleCloseMenu}>
                 Profile
               </MenuItem>
-              <MenuItem onClick={handleCloseMenu}>Log out</MenuItem>
+              <MenuItem onClick={handleLogOut}>Log out</MenuItem>
             </Menu>
             <TypeSearch />
           </div>

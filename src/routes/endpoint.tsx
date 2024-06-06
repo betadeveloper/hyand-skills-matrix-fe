@@ -5,4 +5,7 @@ export enum Endpoint {
   FEEDBACK = 'feedback',
   WIKI = 'wiki',
   PROFILE = 'profile',
+  LOGIN = 'login',
+  REGISTER = 'register',
+  GOALS = 'goals',
 }

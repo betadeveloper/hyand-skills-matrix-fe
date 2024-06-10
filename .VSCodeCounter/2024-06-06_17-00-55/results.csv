@@ -1,0 +1,38 @@
+"filename", "language", "JSON", "JSON with Comments", "TypeScript", "HTML", "TypeScript JSX", "CSS", "JavaScript", "Markdown", "XML", "comment", "blank", "total"
+"c:\Users\rtautkus\Desktop\projects\skills-matrix-application-fe\.eslintrc.cjs", "JavaScript", 0, 0, 0, 0, 0, 0, 18, 0, 0, 0, 1, 19
+"c:\Users\rtautkus\Desktop\projects\skills-matrix-application-fe\.million\store.json", "JSON", 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1
+"c:\Users\rtautkus\Desktop\projects\skills-matrix-application-fe\.prettierrc", "JSON", 9, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 10
+"c:\Users\rtautkus\Desktop\projects\skills-matrix-application-fe\README.md", "Markdown", 0, 0, 0, 0, 0, 0, 0, 22, 0, 0, 9, 31
+"c:\Users\rtautkus\Desktop\projects\skills-matrix-application-fe\index.html", "HTML", 0, 0, 0, 17, 0, 0, 0, 0, 0, 0, 2, 19
+"c:\Users\rtautkus\Desktop\projects\skills-matrix-application-fe\package-lock.json", "JSON", 4039, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 4040
+"c:\Users\rtautkus\Desktop\projects\skills-matrix-application-fe\package.json", "JSON", 44, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 45
+"c:\Users\rtautkus\Desktop\projects\skills-matrix-application-fe\public\vite.svg", "XML", 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1
+"c:\Users\rtautkus\Desktop\projects\skills-matrix-application-fe\src\App.css", "CSS", 0, 0, 0, 0, 0, 10, 0, 0, 0, 0, 3, 13
+"c:\Users\rtautkus\Desktop\projects\skills-matrix-application-fe\src\App.tsx", "TypeScript JSX", 0, 0, 0, 0, 20, 0, 0, 0, 0, 0, 3, 23
+"c:\Users\rtautkus\Desktop\projects\skills-matrix-application-fe\src\api\api.ts", "TypeScript", 0, 0, 65, 0, 0, 0, 0, 0, 0, 0, 9, 74
+"c:\Users\rtautkus\Desktop\projects\skills-matrix-application-fe\src\components\information-card\InformationCard.tsx", "TypeScript JSX", 0, 0, 0, 0, 51, 0, 0, 0, 0, 0, 3, 54
+"c:\Users\rtautkus\Desktop\projects\skills-matrix-application-fe\src\components\navigation-bar\NavigationBar.tsx", "TypeScript JSX", 0, 0, 0, 0, 170, 0, 0, 0, 0, 1, 12, 183
+"c:\Users\rtautkus\Desktop\projects\skills-matrix-application-fe\src\components\not-found\NotFound.tsx", "TypeScript JSX", 0, 0, 0, 0, 83, 0, 0, 0, 0, 0, 3, 86
+"c:\Users\rtautkus\Desktop\projects\skills-matrix-application-fe\src\components\search\Search.tsx", "TypeScript JSX", 0, 0, 0, 0, 42, 0, 0, 0, 0, 0, 6, 48
+"c:\Users\rtautkus\Desktop\projects\skills-matrix-application-fe\src\index.css", "CSS", 0, 0, 0, 0, 0, 61, 0, 0, 0, 0, 8, 69
+"c:\Users\rtautkus\Desktop\projects\skills-matrix-application-fe\src\interface\Employee.tsx", "TypeScript JSX", 0, 0, 0, 0, 15, 0, 0, 0, 0, 0, 2, 17
+"c:\Users\rtautkus\Desktop\projects\skills-matrix-application-fe\src\main.tsx", "TypeScript JSX", 0, 0, 0, 0, 9, 0, 0, 0, 0, 0, 2, 11
+"c:\Users\rtautkus\Desktop\projects\skills-matrix-application-fe\src\pages\career\Career.tsx", "TypeScript JSX", 0, 0, 0, 0, 80, 0, 0, 0, 0, 0, 10, 90
+"c:\Users\rtautkus\Desktop\projects\skills-matrix-application-fe\src\pages\feedback\Feedback.tsx", "TypeScript JSX", 0, 0, 0, 0, 4, 0, 0, 0, 0, 0, 2, 6
+"c:\Users\rtautkus\Desktop\projects\skills-matrix-application-fe\src\pages\goals\Goals.tsx", "TypeScript JSX", 0, 0, 0, 0, 4, 0, 0, 0, 0, 0, 2, 6
+"c:\Users\rtautkus\Desktop\projects\skills-matrix-application-fe\src\pages\login\LogIn.tsx", "TypeScript JSX", 0, 0, 0, 0, 131, 0, 0, 0, 0, 0, 7, 138
+"c:\Users\rtautkus\Desktop\projects\skills-matrix-application-fe\src\pages\main-page\MainPage.tsx", "TypeScript JSX", 0, 0, 0, 0, 42, 0, 0, 0, 0, 0, 5, 47
+"c:\Users\rtautkus\Desktop\projects\skills-matrix-application-fe\src\pages\profile\Profile.tsx", "TypeScript JSX", 0, 0, 0, 0, 151, 0, 0, 0, 0, 1, 12, 164
+"c:\Users\rtautkus\Desktop\projects\skills-matrix-application-fe\src\pages\register\Register.tsx", "TypeScript JSX", 0, 0, 0, 0, 195, 0, 0, 0, 0, 0, 7, 202
+"c:\Users\rtautkus\Desktop\projects\skills-matrix-application-fe\src\pages\statistics\Statistics.tsx", "TypeScript JSX", 0, 0, 0, 0, 23, 0, 0, 0, 0, 0, 4, 27
+"c:\Users\rtautkus\Desktop\projects\skills-matrix-application-fe\src\pages\wiki\Wiki.tsx", "TypeScript JSX", 0, 0, 0, 0, 4, 0, 0, 0, 0, 0, 2, 6
+"c:\Users\rtautkus\Desktop\projects\skills-matrix-application-fe\src\routes\ProtectedRoute.tsx", "TypeScript JSX", 0, 0, 0, 0, 33, 0, 0, 0, 0, 0, 7, 40
+"c:\Users\rtautkus\Desktop\projects\skills-matrix-application-fe\src\routes\endpoint.tsx", "TypeScript JSX", 0, 0, 0, 0, 11, 0, 0, 0, 0, 0, 1, 12
+"c:\Users\rtautkus\Desktop\projects\skills-matrix-application-fe\src\routes\routes.tsx", "TypeScript JSX", 0, 0, 0, 0, 96, 0, 0, 0, 0, 0, 9, 105
+"c:\Users\rtautkus\Desktop\projects\skills-matrix-application-fe\src\theme.ts", "TypeScript", 0, 0, 18, 0, 0, 0, 0, 0, 0, 0, 3, 21
+"c:\Users\rtautkus\Desktop\projects\skills-matrix-application-fe\src\types\user-types.ts", "TypeScript", 0, 0, 8, 0, 0, 0, 0, 0, 0, 0, 1, 9
+"c:\Users\rtautkus\Desktop\projects\skills-matrix-application-fe\src\vite-env.d.ts", "TypeScript", 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 2
+"c:\Users\rtautkus\Desktop\projects\skills-matrix-application-fe\tsconfig.json", "JSON with Comments", 0, 21, 0, 0, 0, 0, 0, 0, 0, 2, 3, 26
+"c:\Users\rtautkus\Desktop\projects\skills-matrix-application-fe\tsconfig.node.json", "JSON", 11, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 12
+"c:\Users\rtautkus\Desktop\projects\skills-matrix-application-fe\vite.config.ts", "TypeScript", 0, 0, 5, 0, 0, 0, 0, 0, 0, 0, 2, 7
+"Total", "-", 4104, 21, 96, 17, 1164, 71, 18, 22, 1, 5, 145, 5664

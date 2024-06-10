@@ -12,5 +12,5 @@ export interface Employee {
   email: string;
   position: string;
   department: string;
-  careerLevel?: CareerLevel;
+  careerLevel: CareerLevel;
 }

@@ -8,4 +8,6 @@ export enum Endpoint {
   LOGIN = 'login',
   REGISTER = 'register',
   GOALS = 'goals',
+  TOS = 'tos',
+  PRIVACYPOLICY = 'privacy-policy'
 }

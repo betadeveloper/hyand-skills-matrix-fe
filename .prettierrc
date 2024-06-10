@@ -1,9 +1,12 @@
 {
-  "semi": true,
+  "trailingComma": "none",
+  "editor.formatOnSave": true,
+  "tabWidth": 2,
   "singleQuote": true,
-  "trailingComma": "all",
-  "bracketSpacing": true,
   "printWidth": 120,
-  "endOfLine": "lf",
-  "tabWidth": 2
+  "bracketSpacing": true,
+  "bracketSameLine": true,
+  "arrowParens": "always",
+  "endOfLine": "lf"
 }
+

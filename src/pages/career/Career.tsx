@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Card, CardContent, Box, Typography, MenuItem, Select, LinearProgress } from '@mui/material';
+import { Card, CardContent, Box, Typography, MenuItem, Select, LinearProgress, Button } from '@mui/material';
 import { get, post, put } from '../../api/api.ts';
 import { toast } from 'react-toastify';
 const Career = () => {
@@ -8,7 +8,7 @@ const Career = () => {
     MID = 'MID',
     SENIOR = 'SENIOR',
     LEAD = 'LEAD',
-    PRINCIPAL = 'PRINCIPAL',
+    PRINCIPAL = 'PRINCIPAL'
   }
 
   interface Skill {
@@ -28,7 +28,7 @@ const Career = () => {
   }
 
   function calculateFinalCareerPathScore(proficiencies: number[], weights: number[]): number {
-    const numerator = proficiencies.reduce((acc, proficiency, i) => acc + (proficiency / 5) * weights[i], 0);
+    const numerator = proficiencies.reduce((acc, proficiency, i) => acc + Math.pow(proficiency / 5, 2) * weights[i], 0);
     const denominator = weights.reduce((acc, weight) => acc + weight, 0);
 
     return (numerator / denominator) * 360;
@@ -63,29 +63,31 @@ const Career = () => {
       setCareerPaths(response);
       setLoading(false);
     });
-
-    if (careerPaths.length > 0) {
-      const weights = careerPaths[0].skills.map((skill) => skill.weight);
-      const score = calculateFinalCareerPathScore(selectedProficiencies, weights);
-      setScore(score);
-
-      if (score < 72) {
-        setCareerLevel(CareerLevel.JUNIOR);
-      } else if (score < 144) {
-        setCareerLevel(CareerLevel.MID);
-      } else if (score < 216) {
-        setCareerLevel(CareerLevel.SENIOR);
-      } else if (score < 288) {
-        setCareerLevel(CareerLevel.LEAD);
-      } else {
-        setCareerLevel(CareerLevel.PRINCIPAL);
-      }
-    }
   }, [selectedProficiencies]);
 
   if (loading) {
     return <div>Loading...</div>;
   }
+
+  const calculateCareerLevel = () => {
+    if (careerPaths.length > 0) {
+      const weights = careerPaths[0].skills.map((skill) => skill.weight);
+      const score = calculateFinalCareerPathScore(selectedProficiencies, weights);
+      setScore(score);
+
+      if (score <= 72) {
+        setCareerLevel(CareerLevel.JUNIOR);
+      } else if (score <= 144) {
+        setCareerLevel(CareerLevel.MID);
+      } else if (score <= 216) {
+        setCareerLevel(CareerLevel.SENIOR);
+      } else if (score <= 288) {
+        setCareerLevel(CareerLevel.LEAD);
+      } else {
+        setCareerLevel(CareerLevel.PRINCIPAL);
+      }
+    }
+  };
 
   return (
     <>
@@ -97,18 +99,19 @@ const Career = () => {
       </Box>
       <Box display={'flex'}>
         {careerLevels.map((careerLevelEl: CareerLevel, index: number) => (
-          <Box key={index} sx={{ maxWidth: 400 }} flex={1}>
+          <Box key={index} flex={1}>
             <Card
               variant="outlined"
               sx={{
                 backgroundColor: careerLevelEl === careerLevel ? 'primary.main' : 'white',
-                color: careerLevelEl === careerLevel ? 'white' : 'black',
-              }}
-            >
+                color: careerLevelEl === careerLevel ? 'white' : 'black'
+              }}>
               <CardContent>
                 <Box display="flex" alignItems="center">
                   <Typography variant="h5" fontWeight={'Bold'}>
-                    {careerLevelEl === careerLevel ? ' Current career level: ' : 'Career level: '}
+                    <span style={{ visibility: careerLevelEl === careerLevel ? 'visible' : 'hidden' }}>
+                      Current career level:
+                    </span>
                     <br />
                     {careerLevelEl}
                   </Typography>
@@ -122,7 +125,7 @@ const Career = () => {
       {careerPaths && (
         <Box display={'flex'} alignItems={'center'} justifyContent={'center'} flexDirection={'column'}>
           <Typography variant="h6" mt={3}>
-            Skills for {careerPaths[0].name} Career Path
+            Skills for <b>{careerPaths[0].name}</b> Career Path
           </Typography>
           {careerPaths[0].skills.map((skill, index) => (
             <Box key={index} sx={{ marginBottom: 2 }}>
@@ -134,12 +137,13 @@ const Career = () => {
                   const newProficiencies = [...selectedProficiencies];
                   newProficiencies[index] = Number(event.target.value);
                   setSelectedProficiencies(newProficiencies);
-                }}
-              >
+                }}>
                 <MenuItem value={0} disabled>
                   Select proficiency
                 </MenuItem>
-                <MenuItem value={1}>Beginner</MenuItem>
+                <MenuItem value={1} title="Beginner lol">
+                  Beginner
+                </MenuItem>
                 <MenuItem value={2}>Medium</MenuItem>
                 <MenuItem value={3}>Advanced</MenuItem>
                 <MenuItem value={4}>Master</MenuItem>
@@ -147,6 +151,17 @@ const Career = () => {
               </Select>
             </Box>
           ))}
+          <Button
+            onClick={calculateCareerLevel}
+            sx={{
+              backgroundColor: 'primary.main',
+              color: 'white',
+              padding: '8px 16px',
+              borderRadius: '8px',
+              ':hover': { backgroundColor: 'primary.main', opacity: 0.8 }
+            }}>
+            Confirm
+          </Button>
         </Box>
       )}
     </>

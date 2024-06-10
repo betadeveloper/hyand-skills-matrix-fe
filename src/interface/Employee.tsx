@@ -3,7 +3,7 @@ enum CareerLevel {
   MID,
   SENIOR,
   LEAD,
-  PRINCIPAL,
+  PRINCIPAL
 }
 
 export interface Employee {

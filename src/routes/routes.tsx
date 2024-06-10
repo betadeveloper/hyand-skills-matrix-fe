@@ -15,6 +15,8 @@ import Register from '../pages/register/Register';
 import Login from '../pages/login/LogIn';
 import ProtectedRoute from './ProtectedRoute.tsx';
 import Goals from '../pages/goals/Goals.tsx';
+import PrivacyPolicy from '../pages/privacy-policy/PrivacyPolicy.tsx';
+import Tos from '../pages/tos/Tos.tsx';
 
 type MyErrorBoundaryProps = {
   children: React.ReactNode;
@@ -22,7 +24,7 @@ type MyErrorBoundaryProps = {
 
 class MyErrorBoundary extends Component<MyErrorBoundaryProps> {
   state = {
-    hasError: false,
+    hasError: false
   };
 
   static getDerivedStateFromError() {
@@ -45,11 +47,19 @@ class MyErrorBoundary extends Component<MyErrorBoundaryProps> {
 const routeOptions: RouteObject[] = [
   {
     path: Endpoint.LOGIN,
-    element: <Login />,
+    element: <Login />
   },
   {
     path: Endpoint.REGISTER,
-    element: <Register />,
+    element: <Register />
+  },
+  {
+    path: Endpoint.TOS,
+    element: <Tos />
+  },
+  {
+    path: Endpoint.PRIVACYPOLICY,
+    element: <PrivacyPolicy />
   },
   {
     element: (
@@ -65,40 +75,38 @@ const routeOptions: RouteObject[] = [
     children: [
       {
         path: Endpoint.MAIN_PAGE,
-        element: (
-          <ProtectedRoute path={Endpoint.MAIN_PAGE} element={<MainPage />} />
-        ),
+        element: <ProtectedRoute path={Endpoint.MAIN_PAGE} element={<MainPage />} />
       },
       {
         path: Endpoint.STATISTICS,
-        element: <ProtectedRoute path={Endpoint.STATISTICS} element={<Statistics />} />,
+        element: <ProtectedRoute path={Endpoint.STATISTICS} element={<Statistics />} />
       },
       {
         path: Endpoint.CAREER,
-        element: <ProtectedRoute path={Endpoint.CAREER} element={<Career />} />,
+        element: <ProtectedRoute path={Endpoint.CAREER} element={<Career />} />
       },
       {
         path: Endpoint.FEEDBACK,
-        element: <ProtectedRoute path={Endpoint.FEEDBACK} element={<Feedback />} />,
+        element: <ProtectedRoute path={Endpoint.FEEDBACK} element={<Feedback />} />
       },
       {
         path: Endpoint.WIKI,
-        element: <ProtectedRoute path={Endpoint.WIKI} element={<Wiki />} />,
+        element: <ProtectedRoute path={Endpoint.WIKI} element={<Wiki />} />
       },
       {
         path: Endpoint.PROFILE,
-        element: <ProtectedRoute path={Endpoint.PROFILE} element={<Profile />} />,
+        element: <ProtectedRoute path={Endpoint.PROFILE} element={<Profile />} />
       },
       {
         path: Endpoint.GOALS,
-        element: <ProtectedRoute path={Endpoint.GOALS} element={<Goals />} />,
+        element: <ProtectedRoute path={Endpoint.GOALS} element={<Goals />} />
       }
-    ],
+    ]
   },
   {
     path: '*',
-    element: <NotFound />,
-  },
+    element: <NotFound />
+  }
 ];
 
 export const routes: RemixRouter = createBrowserRouter(routeOptions);

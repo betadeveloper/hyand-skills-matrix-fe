@@ -9,7 +9,7 @@ import {
   CssBaseline,
   Link,
   Grid,
-  Avatar,
+  Avatar
 } from '@mui/material';
 
 import { Lock } from '@mui/icons-material';
@@ -33,7 +33,7 @@ export default function Register() {
     register,
     handleSubmit,
     formState: { errors },
-    watch,
+    watch
   } = useForm<FormData>();
   const [errorMessage, setErrorMessage] = useState<string>('');
 
@@ -43,7 +43,7 @@ export default function Register() {
       firstName,
       lastName,
       email,
-      password,
+      password
     })
       .then(() => {
         navigate('/login');
@@ -64,29 +64,21 @@ export default function Register() {
       <Link href="/">
         <Typography margin={2}>Return to presentation page</Typography>
       </Link>
-      <Container component="main" maxWidth="xs" sx={{ display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center'}}>
+      <Container component="main" maxWidth="xs" sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
         <CssBaseline />
         <Box
           sx={{
             display: 'flex',
             flexDirection: 'column',
-            alignItems: 'center',
-          }}
-        >
+            alignItems: 'center'
+          }}>
           <Avatar sx={{ m: 1, bgcolor: '#D8DAFF', width: 55, height: 55 }}>
             <Lock sx={{ fontSize: 40, color: '#000' }} />
           </Avatar>
           <Typography component="h1" variant="h5" fontWeight={'medium'}>
             Register
           </Typography>
-          <Box
-            component="form"
-            onSubmit={handleSubmit(onSubmit)}
-            noValidate
-            sx={{ mt: 1 }}
-          >
+          <Box component="form" onSubmit={handleSubmit(onSubmit)} noValidate sx={{ mt: 1 }}>
             <Grid container spacing={1}>
               <Grid item xs={6}>
                 <TextField
@@ -97,7 +89,7 @@ export default function Register() {
                   label="First name"
                   autoFocus
                   {...register('firstName', {
-                    required: 'Please enter your First name',
+                    required: 'Please enter your First name'
                   })}
                   error={!!errors.email}
                   helperText={errors.email?.message}
@@ -112,76 +104,70 @@ export default function Register() {
                   label="Last name"
                   autoFocus
                   {...register('lastName', {
-                    required: 'Please enter your Last name',
+                    required: 'Please enter your Last name'
                   })}
                   error={!!errors.email}
                   helperText={errors.email?.message}
                 />
               </Grid>
             </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  margin="normal"
-                  required
-                  fullWidth
-                  id="email"
-                  label="Email Address"
-                  autoFocus
-                  {...register('email', {
-                    required: 'Please enter your Email',
-                  })}
-                  error={!!errors.email}
-                  helperText={errors.email?.message}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  margin="normal"
-                  required
-                  fullWidth
-                  label="Password"
-                  type="password"
-                  id="password"
-                  autoComplete="current-password"
-                  {...register('password', {
-                    required: 'Please enter your password',
-                  })}
-                  error={!!errors.password}
-                  helperText={errors.password?.message}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  margin="normal"
-                  required
-                  fullWidth
-                  label="Confirm Password"
-                  type="password"
-                  id="confirm-password"
-                  autoComplete="current-password"
-                  {...register('confirmPassword', {
-                    validate: (value) =>
-                      value === password || 'The passwords do not match',
-                  })}
-                  error={!!errors.confirmPassword}
-                  helperText={errors.confirmPassword?.message}
-                />
-              </Grid>
-              <Button
-                type="submit"
+            <Grid item xs={12}>
+              <TextField
+                margin="normal"
+                required
                 fullWidth
-                variant="contained"
-                sx={{ mt: 3, mb: 2 }}
-              >
-                Register
-              </Button>
-              <Grid container justifyContent="flex-end">
-                <Grid item>
-                  <Link href="/login" variant="body2">
-                    Already have an account? Log in
-                  </Link>
-                </Grid>
+                id="email"
+                label="Email Address"
+                autoFocus
+                {...register('email', {
+                  required: 'Please enter your Email'
+                })}
+                error={!!errors.email}
+                helperText={errors.email?.message}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                margin="normal"
+                required
+                fullWidth
+                label="Password"
+                type="password"
+                id="password"
+                autoComplete="current-password"
+                {...register('password', {
+                  required: 'Please enter your password'
+                })}
+                error={!!errors.password}
+                helperText={errors.password?.message}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                margin="normal"
+                required
+                fullWidth
+                label="Confirm Password"
+                type="password"
+                id="confirm-password"
+                autoComplete="current-password"
+                {...register('confirmPassword', {
+                  validate: (value) => value === password || 'The passwords do not match'
+                })}
+                error={!!errors.confirmPassword}
+                helperText={errors.confirmPassword?.message}
+              />
+            </Grid>
+            <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
+              Register
+            </Button>
+            <Grid container justifyContent="flex-end">
+              <Grid item>
+                <Link href="/login" variant="body2">
+                  Already have an account? Log in
+                </Link>
               </Grid>
+            </Grid>
           </Box>
           {errorMessage && (
             <Typography color="error" sx={{ mt: 1 }}>
@@ -192,11 +178,11 @@ export default function Register() {
         <Box sx={{ mt: 3, mb: 3 }}>
           <Typography variant="body2" color="textSecondary" align="center">
             By registering, you agree to our
-            <Link href="/"> Terms of Service</Link> and
-            <Link href="/"> Privacy Policy</Link>.
+            <Link href="/tos"> Terms of Service</Link> and
+            <Link href="/privary-policy"> Privacy Policy</Link>.
           </Typography>
         </Box>
       </Container>
     </ThemeProvider>
-);
+  );
 }

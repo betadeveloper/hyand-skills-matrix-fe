@@ -160,7 +160,7 @@ const Career = () => {
               borderRadius: '8px',
               ':hover': { backgroundColor: 'primary.main', opacity: 0.8 }
             }}>
-            Confirm
+            Evaluate
           </Button>
         </Box>
       )}

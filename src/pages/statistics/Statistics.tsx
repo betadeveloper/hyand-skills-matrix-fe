@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar, Tooltip, Legend } from 'recharts';
 
 const Statistics = () => {
@@ -7,6 +8,10 @@ const Statistics = () => {
     { subject: 'Technical skills', A: 86, B: 130 },
     { subject: 'EQ', A: 99, B: 100 },
   ];
+
+  useEffect(() => {
+    localStorage.setItem('selectedNavItem', 'Statistics');
+  }, []);
 
   return (
     <>

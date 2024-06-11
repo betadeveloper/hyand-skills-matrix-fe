@@ -13,6 +13,8 @@ const MainPage = () => {
     get('http://localhost:8080/api/owners/currentEmployee').then((response: any) => {
       setOwners(response);
     });
+
+    localStorage.setItem('selectedNavItem', 'Home');
   }, []);
 
   return (

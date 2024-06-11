@@ -18,7 +18,14 @@ interface InformationCardProps {
   owners?: Array<{ id: number; firstName: string; lastName: string }>;
 }
 
-export default function InformationCard({ IconComponent, title, content, buttonText, linkEndpoint, owners }: Readonly<InformationCardProps>) {
+export default function InformationCard({
+  IconComponent,
+  title,
+  content,
+  buttonText,
+  linkEndpoint,
+  owners
+}: Readonly<InformationCardProps>) {
   return (
     <Box sx={{ maxWidth: 400 }}>
       <Card variant="outlined">
@@ -35,7 +42,9 @@ export default function InformationCard({ IconComponent, title, content, buttonT
           {owners && owners.length > 0 && (
             <Box>
               {owners.map((owner) => (
-                <Link to={`/employee/${owner.id}`} key={owner.id}><Typography key={owner.id} fontWeight={500}>{`${owner.firstName} ${owner.lastName}`}</Typography></Link>
+                <Link to={`/employee/${owner.id}`} key={owner.id}>
+                  <Typography key={owner.id} fontWeight={500}>{`${owner.firstName} ${owner.lastName}`}</Typography>
+                </Link>
               ))}
             </Box>
           )}

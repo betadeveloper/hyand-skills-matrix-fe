@@ -21,15 +21,25 @@ import { get } from '../../api/api.ts';
 export default function NavigationBar() {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [drawerOpen, setDrawerOpen] = React.useState(false);
-  const [selectedNavItem, setSelectedNavItem] = React.useState<string>('Home');
+  const [selectedNavItem, setSelectedNavItem] = React.useState<string>('');
   const [loggedInUser, setLoggedInUser] = React.useState<string>('');
 
+  const handleNavItemClick = (navItem: string) => {
+    setSelectedNavItem(navItem);
+    localStorage.setItem('selectedNavItem', navItem);
+  };
+  
   React.useEffect(() => {
     get('http://localhost:8080/api/employee/current')
-      .then((response) => {
+      .then((response: any) => {
         setLoggedInUser(`${response.firstName} ${response.lastName}`);
       });
-  });
+  
+    const storedNavItem = localStorage.getItem('selectedNavItem'); 
+    if (storedNavItem) {
+      setSelectedNavItem(storedNavItem);
+    }
+  }, []);
 
   const navItems = [
     { to: Endpoint.MAIN_PAGE, icon: <Home sx={{ color: 'black' }} />, text: 'Home' },
@@ -54,10 +64,6 @@ export default function NavigationBar() {
 
   const handleDrawerClose = () => {
     setDrawerOpen(false);
-  };
-
-  const handleNavItemClick = (navItem: string) => {
-    setSelectedNavItem(navItem);
   };
 
   return (

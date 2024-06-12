@@ -8,14 +8,19 @@ import { useEffect, useState } from 'react';
 
 const MainPage = () => {
   const [owners, setOwners] = useState([]);
+  const [goals, setGoals] = useState([]);
 
   useEffect(() => {
     get('http://localhost:8080/api/owners/currentEmployee').then((response: any) => {
       setOwners(response);
     });
 
+    get('http://localhost:8080/api/goals/currentEmployee').then((response: any) => {
+      setGoals(response);
+    });
+
     localStorage.setItem('selectedNavItem', 'Home');
-  }, []);
+  }, [goals]);
 
   return (
     <>
@@ -25,14 +30,17 @@ const MainPage = () => {
           height: 150,
           backgroundImage: `url(${head})`,
           backgroundSize: 'cover',
-          backgroundPosition: 'center',
+          backgroundPosition: 'center'
         }}
       />
       <InformationCard
         IconComponent={DonutSmall}
         title={'Goals'}
         buttonText={'View details'}
+        goals={goals}
         linkEndpoint={Endpoint.GOALS}
+        actionButton={true}
+        actionButtonText="Add goal"
       />
       <InformationCard
         IconComponent={TrackChanges}
@@ -40,7 +48,13 @@ const MainPage = () => {
         buttonText={'View details'}
         linkEndpoint={Endpoint.STATISTICS}
       />
-      <InformationCard IconComponent={Group} title={'Owners'} buttonText={''} owners={owners}></InformationCard>
+      <InformationCard
+        IconComponent={Group}
+        title={'Owners'}
+        buttonText={'View Details'}
+        owners={owners}
+        actionButton={true}
+        actionButtonText="Add owners"></InformationCard>
     </>
   );
 };

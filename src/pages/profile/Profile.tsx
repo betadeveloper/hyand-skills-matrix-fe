@@ -8,7 +8,6 @@ import { get, put } from '../../api/api.ts';
 import { Employee } from '../../interface/Employee.tsx';
 
 const Profile = () => {
-
   interface EmployeeResponse {
     firstName: string;
     lastName: string;
@@ -34,14 +33,13 @@ const Profile = () => {
   };
 
   useEffect(() => {
-    get<EmployeeResponse>('http://localhost:8080/api/employee/current')
-      .then((response: EmployeeResponse) => {
-        setFirstName(response.firstName);
-        setLastName(response.lastName);
-        setEmail(response.email);
-        setPosition(response.position);
-        setDepartment(response.department);
-      });
+    get<EmployeeResponse>('http://localhost:8080/api/employee/current').then((response: EmployeeResponse) => {
+      setFirstName(response.firstName);
+      setLastName(response.lastName);
+      setEmail(response.email);
+      setPosition(response.position);
+      setDepartment(response.department);
+    });
   }, []);
 
   const updateEmployee = (newEmployeeDetails: EmployeeResponse) => {
@@ -62,18 +60,17 @@ const Profile = () => {
       lastName: lastName,
       email: email,
       position: position,
-      department: department,
-    }
-    updateEmployee(newEmployeeDetails)
-      .then((data) => {
-        if(data) {
-          setFirstName(data.firstName);
-          setLastName(data.lastName);
-          setEmail(data.email);
-          setPosition(data.position);
-          setDepartment(data.department);
-        }
-      })
+      department: department
+    };
+    updateEmployee(newEmployeeDetails).then((data) => {
+      if (data) {
+        setFirstName(data.firstName);
+        setLastName(data.lastName);
+        setEmail(data.email);
+        setPosition(data.position);
+        setDepartment(data.department);
+      }
+    });
   };
 
   return (
@@ -84,7 +81,7 @@ const Profile = () => {
           height: 150,
           backgroundImage: `url(${head})`,
           backgroundSize: 'cover',
-          backgroundPosition: 'center',
+          backgroundPosition: 'center'
         }}
       />
       <Box sx={{ padding: 2 }}>
@@ -92,20 +89,14 @@ const Profile = () => {
           <Grid item xs={12} style={{ textAlign: 'center', display: 'flex', justifyContent: 'center' }}>
             <IconButton
               sx={{ width: 150, height: 150, border: '2px solid white', marginTop: '-100px' }}
-              onClick={handleInputClick}
-            >
+              onClick={handleInputClick}>
               <Avatar
                 alt="Profile Picture"
                 src="/src/assets/images/test-profile-image.jpg"
                 sx={{ width: 150, height: 150, border: '2px solid white' }}
               />
             </IconButton>
-            <input
-              type="file"
-              ref={fileInputRef}
-              style={{ display: 'none' }}
-              onChange={handleFileChange}
-            />
+            <input type="file" ref={fileInputRef} style={{ display: 'none' }} onChange={handleFileChange} />
           </Grid>
           <Grid item xs={6}>
             <TextField
@@ -116,7 +107,14 @@ const Profile = () => {
               sx={{ mb: 2 }}
               // Added invalid inputs validation
               error={firstName && (firstName.length < 3 || firstName.length > 50)}
-              helperText={firstName && (firstName.length < 3 ? 'First Name is too short (min 3 characters)' : firstName.length > 50 ? 'First Name is too long (max 50 characters)' : '')}
+              helperText={
+                firstName &&
+                (firstName.length < 3
+                  ? 'First Name is too short (min 3 characters)'
+                  : firstName.length > 50
+                    ? 'First Name is too long (max 50 characters)'
+                    : '')
+              }
             />
             <TextField
               label="Last Name"
@@ -127,13 +125,7 @@ const Profile = () => {
             />
           </Grid>
           <Grid item xs={6}>
-            <TextField
-              disabled={true}
-              label="Email"
-              value={email ? email : ''}
-              fullWidth
-              sx={{ mb: 2 }}
-            />
+            <TextField disabled={true} label="Email" value={email ? email : ''} fullWidth sx={{ mb: 2 }} />
             <TextField
               label="Position"
               value={position ? position : ''}

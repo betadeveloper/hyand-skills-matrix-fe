@@ -8,11 +8,21 @@ import Typography from '@mui/material/Typography';
 import { SvgIconProps } from '@mui/material/SvgIcon';
 import { Link } from 'react-router-dom';
 import { Endpoint } from '../../routes/endpoint.tsx';
-import { Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, TextField } from '@mui/material';
-import { post, remove } from '../../api/api.ts';
-import { useState } from 'react';
+import {
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
+  DialogActions,
+  TextField,
+  MenuItem,
+  Select
+} from '@mui/material';
+import { get, post, remove } from '../../api/api.ts';
+import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import CloseIcon from '@mui/icons-material/Close';
+import { Employee } from '../../interface/Employee.tsx';
 
 interface InformationCardProps {
   IconComponent: React.ElementType<SvgIconProps>;
@@ -42,8 +52,21 @@ export default function InformationCard({
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [dueDate, setDueDate] = useState(new Date().toISOString().substring(0, 10));
+  const [employees, setEmployees] = useState<Employee[]>([]);
+  const [ownerDialogOpen, setOwnerDialogOpen] = useState(false);
+  const [selectedEmployee, setSelectedEmployee] = useState<Employee>();
+
+  useEffect(() => {
+    get('http://localhost:8080/api/employees').then((response: unknown) => {
+      setEmployees(response as Employee[]);
+    });
+  }, []);
 
   const handleCreateGoal = () => {
+    if (!description || !dueDate || !name) {
+      toast.error('Please fill in all fields');
+      return;
+    }
     post('http://localhost:8080/api/goal', {
       name,
       description,
@@ -60,12 +83,27 @@ export default function InformationCard({
     });
   };
 
+  const handleCreateOwner = () => {
+    if (selectedEmployee) {
+      post('http://localhost:8080/api/owners/currentEmployee', selectedEmployee).then(() => {
+        setOwnerDialogOpen(false);
+        toast.success('Owner added successfully');
+      });
+    } else {
+      toast.error('Please select an employee');
+    }
+  };
+
   const handleClickOpen = () => {
     setOpen(true);
   };
 
   const handleClose = () => {
     setOpen(false);
+  };
+
+  const handleOwnerDialogOpen = () => {
+    setOwnerDialogOpen(true);
   };
 
   return (
@@ -111,6 +149,7 @@ export default function InformationCard({
             </Box>
           )}
         </CardContent>
+
         <Dialog open={open} onClose={handleClose}>
           <DialogTitle>Add Goal</DialogTitle>
           <DialogContent>

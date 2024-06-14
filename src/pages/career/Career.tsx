@@ -1,7 +1,21 @@
 import { useEffect, useState } from 'react';
-import { Card, CardContent, Box, Typography, MenuItem, Select, LinearProgress, Button } from '@mui/material';
+import {
+  Card,
+  CardContent,
+  Box,
+  Typography,
+  MenuItem,
+  Select,
+  LinearProgress,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  TextField
+} from '@mui/material';
 import { get, post, put } from '../../api/api.ts';
-import { toast } from 'react-toastify';
+import { ToastContainer, toast } from 'react-toastify';
 const Career = () => {
   enum CareerLevel {
     JUNIOR = 'JUNIOR',
@@ -42,12 +56,16 @@ const Career = () => {
   const [position, setPosition] = useState<string>('');
   const [department, setDepartment] = useState<string>('');
   const [careerLevel, setCareerLevel] = useState<CareerLevel>();
+  const [owners, setOwners] = useState<any[]>([]);
 
   const [score, setScore] = useState<number>(0);
 
   const [loading, setLoading] = useState<boolean>(true);
 
   const [selectedProficiencies, setSelectedProficiencies] = useState<number[]>([]);
+
+  const [open, setOpen] = useState(false);
+  const [date, setDate] = useState('');
 
   const careerLevels = Object.values(CareerLevel);
 
@@ -63,11 +81,32 @@ const Career = () => {
       setCareerPaths(response);
       setLoading(false);
     });
+    get('http://localhost:8080/api/owners/currentEmployee').then((response: any) => {
+      setOwners(response);
+    });
   }, [selectedProficiencies]);
 
   if (loading) {
     return <div>Loading...</div>;
   }
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const handleSave = () => {
+    if (!date) {
+      toast.error('Please select a date!');
+      return;
+    }
+
+    toast.success(`Meeting has been scheduled with ${owners[0].firstName} ${owners[0].lastName} on ${date}!`);
+    setOpen(false);
+  };
 
   const calculateCareerLevel = () => {
     if (careerPaths.length > 0) {
@@ -141,27 +180,71 @@ const Career = () => {
                 <MenuItem value={0} disabled>
                   Select proficiency
                 </MenuItem>
-                <MenuItem value={1} title="Beginner lol">
+                <MenuItem value={1} title="Beginner - Fundamentals, basic abilities with the skill">
                   Beginner
                 </MenuItem>
-                <MenuItem value={2}>Medium</MenuItem>
-                <MenuItem value={3}>Advanced</MenuItem>
-                <MenuItem value={4}>Master</MenuItem>
-                <MenuItem value={5}>Expert</MenuItem>
+                <MenuItem value={2} title="Medium - Have some experience with this skill">
+                  Medium
+                </MenuItem>
+                <MenuItem value={3} title="Advanced - Have substantial understanding and experience with this skill">
+                  Advanced
+                </MenuItem>
+                <MenuItem value={4} title="Master - Have deep understanding and experience with this skill">
+                  Master
+                </MenuItem>
+                <MenuItem value={5} title="Expert - Have comprehensive and authoritative knowledge of this skill">
+                  Expert
+                </MenuItem>
               </Select>
             </Box>
           ))}
-          <Button
-            onClick={calculateCareerLevel}
-            sx={{
-              backgroundColor: 'primary.main',
-              color: 'white',
-              padding: '8px 16px',
-              borderRadius: '8px',
-              ':hover': { backgroundColor: 'primary.main', opacity: 0.8 }
-            }}>
-            Evaluate
-          </Button>
+          <Box>
+            <Button
+              onClick={calculateCareerLevel}
+              sx={{
+                backgroundColor: 'primary.main',
+                color: 'white',
+                padding: '8px 16px',
+                borderRadius: '8px',
+                ':hover': { backgroundColor: 'primary.main', opacity: 0.8 }
+              }}>
+              Evaluate
+            </Button>
+            <Button sx={{ ml: 20 }} variant="outlined" color="primary" onClick={handleClickOpen}>
+              Book Meeting
+            </Button>
+            <Dialog open={open} onClose={handleClose} fullWidth>
+              <DialogTitle fontSize={32}>Book a Meeting With Owner</DialogTitle>
+              <DialogContent>
+                <Typography mb={2} fontSize={18}>
+                  Owner:{' '}
+                  <b>{owners.length > 0 ? `${owners[0].firstName} ${owners[0].lastName}` : 'No owners available'}</b>
+                </Typography>
+                <Typography mt={2} mb={2} fontSize={20}>
+                  Score: {`${score.toPrecision(4)}`}
+                </Typography>
+                <TextField
+                  autoFocus
+                  margin="dense"
+                  id="date"
+                  label="Meeting Date"
+                  type="datetime-local"
+                  fullWidth
+                  value={date}
+                  onChange={(e) => setDate(e.target.value)}
+                  InputLabelProps={{
+                    shrink: true
+                  }}
+                  required
+                />
+              </DialogContent>
+              <DialogActions>
+                <Button onClick={handleClose}>Cancel</Button>
+                <Button onClick={handleSave}>Send</Button>
+              </DialogActions>
+            </Dialog>
+            <ToastContainer />
+          </Box>
         </Box>
       )}
     </>

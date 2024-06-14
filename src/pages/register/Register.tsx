@@ -89,7 +89,8 @@ export default function Register() {
                   label="First name"
                   autoFocus
                   {...register('firstName', {
-                    required: 'Please enter your First name'
+                    required: 'Please enter your First name',
+                    minLength: { value: 2, message: 'First name must be at least 2 letters' }
                   })}
                   error={!!errors.email}
                   helperText={errors.email?.message}
@@ -104,7 +105,8 @@ export default function Register() {
                   label="Last name"
                   autoFocus
                   {...register('lastName', {
-                    required: 'Please enter your Last name'
+                    required: 'Please enter your Last name',
+                    minLength: { value: 2, message: 'Last name must be at least 2 letters' }
                   })}
                   error={!!errors.email}
                   helperText={errors.email?.message}
@@ -120,7 +122,11 @@ export default function Register() {
                 label="Email Address"
                 autoFocus
                 {...register('email', {
-                  required: 'Please enter your Email'
+                  required: 'Please enter your Email',
+                  pattern: {
+                    value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+                    message: 'Please enter a valid input'
+                  }
                 })}
                 error={!!errors.email}
                 helperText={errors.email?.message}

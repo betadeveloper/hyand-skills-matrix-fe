@@ -16,6 +16,9 @@ import {
 } from '@mui/material';
 import { get, post, put } from '../../api/api.ts';
 import { ToastContainer, toast } from 'react-toastify';
+import Confetti from 'react-confetti';
+import { useWindowSize } from 'react-use';
+
 const Career = () => {
   enum CareerLevel {
     JUNIOR = 'JUNIOR',
@@ -44,28 +47,27 @@ const Career = () => {
   function calculateFinalCareerPathScore(proficiencies: number[], weights: number[]): number {
     const numerator = proficiencies.reduce((acc, proficiency, i) => acc + Math.pow(proficiency / 5, 2) * weights[i], 0);
     const denominator = weights.reduce((acc, weight) => acc + weight, 0);
-
     return (numerator / denominator) * 360;
   }
 
   const [careerPaths, setCareerPaths] = useState<CareerPath[]>([]);
-
   const [firstName, setFirstName] = useState<string>('');
   const [lastName, setLastName] = useState<string>('');
   const [email, setEmail] = useState<string>('');
   const [position, setPosition] = useState<string>('');
   const [department, setDepartment] = useState<string>('');
   const [careerLevel, setCareerLevel] = useState<CareerLevel>();
+  const [evaluatedCareerLevel, setEvaluatedCareerLevel] = useState<CareerLevel>();
   const [owners, setOwners] = useState<any[]>([]);
 
   const [score, setScore] = useState<number>(0);
-
   const [loading, setLoading] = useState<boolean>(true);
-
   const [selectedProficiencies, setSelectedProficiencies] = useState<number[]>([]);
-
   const [open, setOpen] = useState(false);
   const [date, setDate] = useState('');
+  const [showConfetti, setShowConfetti] = useState(false);
+
+  const { width, height } = useWindowSize();
 
   const careerLevels = Object.values(CareerLevel);
 
@@ -76,6 +78,7 @@ const Career = () => {
       setEmail(response.email);
       setPosition(response.position);
       setDepartment(response.department);
+      setCareerLevel(response.careerLevel);
     });
     get('http://localhost:8080/api/careerPaths').then((response: any) => {
       setCareerPaths(response);
@@ -84,11 +87,7 @@ const Career = () => {
     get('http://localhost:8080/api/owners/currentEmployee').then((response: any) => {
       setOwners(response);
     });
-  }, [selectedProficiencies]);
-
-  if (loading) {
-    return <div>Loading...</div>;
-  }
+  }, []);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -114,158 +113,173 @@ const Career = () => {
       const score = calculateFinalCareerPathScore(selectedProficiencies, weights);
       setScore(score);
 
+      let newCareerLevel: CareerLevel;
+
       if (score <= 72) {
-        setCareerLevel(CareerLevel.JUNIOR);
+        newCareerLevel = CareerLevel.JUNIOR;
       } else if (score <= 144) {
-        setCareerLevel(CareerLevel.MID);
+        newCareerLevel = CareerLevel.MID;
       } else if (score <= 216) {
-        setCareerLevel(CareerLevel.SENIOR);
+        newCareerLevel = CareerLevel.SENIOR;
       } else if (score <= 288) {
-        setCareerLevel(CareerLevel.LEAD);
+        newCareerLevel = CareerLevel.LEAD;
       } else {
-        setCareerLevel(CareerLevel.PRINCIPAL);
+        newCareerLevel = CareerLevel.PRINCIPAL;
+      }
+
+      setEvaluatedCareerLevel(newCareerLevel);
+
+      if (newCareerLevel !== careerLevel) {
+        setShowConfetti(true);
+        setTimeout(() => setShowConfetti(false), 3000);
       }
     }
   };
 
   return (
-      <>
-        <Box sx={{ width: '100%', mb: 0.5 }}>
-          <Typography sx={{ fontSize: 32, fontWeight: 'bold', textAlign: 'center' }}>
-            Score: {score.toFixed(2)}
-          </Typography>
-          <LinearProgress variant="determinate" value={(score / 360) * 100} sx={{ height: '24px' }} />
-        </Box>
-        <Box display={'flex'}>
-          {careerLevels.map((careerLevelEl: CareerLevel, index: number) => (
-              <Box key={index} flex={1}>
-                <Card
-                    variant="outlined"
-                    sx={{
-                      backgroundColor: careerLevelEl === careerLevel ? 'primary.main' : 'white',
-                      color: careerLevelEl === careerLevel ? 'white' : 'black'
-                    }}>
-                  <CardContent>
-                    <Box display="flex" alignItems="center">
-                      <Typography variant="h5" fontWeight={'Bold'}>
-                    <span style={{ visibility: careerLevelEl === careerLevel ? 'visible' : 'hidden' }}>
-                      Current career level:
-                    </span>
-                        <br />
-                        {careerLevelEl}
-                      </Typography>
-                    </Box>
-                  </CardContent>
-                </Card>
-              </Box>
-          ))}
-        </Box>
-
-      {careerPaths && (
-          <Box display={'flex'} alignItems={'center'} justifyContent={'center'} flexDirection={'column'}>
-            <Typography variant="h6" mt={3}>
-              Skills for <b>{careerPaths[0].name}</b> Career Path
-            </Typography>
-            {careerPaths[0].skills.length > 0 ? (
-                careerPaths[0].skills.map((skill, index) => (
-                    <Box key={index} sx={{ marginBottom: 2 }}>
-                      <Typography variant="body1">{skill.name}</Typography>
-                      <Select
-                          sx={{ width: '400px' }}
-                          defaultValue={0}
-                          onChange={(event) => {
-                            const newProficiencies = [...selectedProficiencies];
-                            newProficiencies[index] = Number(event.target.value);
-                            setSelectedProficiencies(newProficiencies);
-                          }}>
-                        <MenuItem value={0} disabled>
-                          Select proficiency
-                        </MenuItem>
-                        <MenuItem value={1} title="Beginner - Fundamentals, basic abilities with the skill">
-                          Beginner
-                        </MenuItem>
-                        <MenuItem value={2} title="Medium - Have some experience with this skill">
-                          Medium
-                        </MenuItem>
-                        <MenuItem value={3} title="Advanced - Have substantial understanding and experience with this skill">
-                          Advanced
-                        </MenuItem>
-                        <MenuItem value={4} title="Master - Have deep understanding and experience with this skill">
-                          Master
-                        </MenuItem>
-                        <MenuItem value={5} title="Expert - Have comprehensive and authoritative knowledge of this skill">
-                          Expert
-                        </MenuItem>
-                      </Select>
-                    </Box>
-                ))
-            ) : (
-                <Typography>No skills available for this career path</Typography>
-            )}
-            {careerPaths[0].skills.length > 0 && (
-                <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '400px', mt: 2 }}>
-                  <Button
-                      onClick={calculateCareerLevel}
-                      sx={{
-                        backgroundColor: 'primary.main',
-                        color: 'white',
-                        padding: '8px 16px',
-                        borderRadius: '8px',
-                        ':hover': { backgroundColor: 'primary.main', opacity: 0.8 }
-                      }}
-                  >
-                    Evaluate
-                  </Button>
-                  <Button sx={{ ml: 20 }} variant="outlined" color="primary" onClick={handleClickOpen}>
-                    Book Meeting
-                  </Button>
-                </Box>
-            )}
-            {careerPaths[0].skills.length === 0 && (
-                <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={() => {
-                      // TODO: Add skills logic here
-                    }}
-                >
-                  Add skills
-                </Button>
-            )}
-            <Dialog open={open} onClose={handleClose} fullWidth>
-              <DialogTitle fontSize={32}>Book a Meeting With Owner</DialogTitle>
-              <DialogContent>
-                <Typography mb={2} fontSize={18}>
-                  Owner:{' '}
-                  <b>{owners.length > 0 ? `${owners[0].firstName} ${owners[0].lastName}` : 'No owners available'}</b>
+    <>
+      {showConfetti && <Confetti width={width} height={height} numberOfPieces={300} />}
+      <Box
+        sx={{
+          width: '100%',
+          mb: 0.5,
+          backgroundImage: 'linear-gradient(120deg, #fdfbfb 0%, #ebedee 100%)',
+          padding: '20px',
+          borderRadius: '12px',
+          boxShadow: '0px 8px 24px rgba(0,0,0,0.1)'
+        }}>
+        <Typography sx={{ fontSize: 32, fontWeight: 'bold', textAlign: 'center', color: '#1976d2' }}>
+          Score: {score ? score.toFixed(2) : 'Not evaluated'}
+        </Typography>
+        <LinearProgress
+          variant="determinate"
+          value={(score / 360) * 100}
+          sx={{ height: '24px', borderRadius: '12px' }}
+        />
+      </Box>
+      <Box display={'flex'} mt={4} justifyContent="space-around">
+        {careerLevels.map((careerLevelEl: CareerLevel, index: number) => (
+          <Box key={index} flex={1}>
+            <Card
+              variant="outlined"
+              sx={{
+                backgroundColor: careerLevelEl === evaluatedCareerLevel ? '#1976d2' : '#fff',
+                color: careerLevelEl === evaluatedCareerLevel ? '#fff' : '#000',
+                transition: 'background-color 0.3s',
+                padding: '8px',
+                borderRadius: '8px',
+                boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)',
+                border: careerLevelEl === careerLevel ? '2px solid #2196f3' : 'none' //
+              }}>
+              <CardContent>
+                <Typography variant="h5" fontWeight="bold">
+                  {careerLevelEl}
                 </Typography>
-                <Typography mt={2} mb={2} fontSize={20}>
-                  Score: {`${score.toPrecision(4)}`}
-                </Typography>
-                <TextField
-                    autoFocus
-                    margin="dense"
-                    id="date"
-                    label="Meeting Date"
-                    type="datetime-local"
-                    fullWidth
-                    value={date}
-                    onChange={(e) => setDate(e.target.value)}
-                    InputLabelProps={{
-                      shrink: true
-                    }}
-                    required
-                />
-              </DialogContent>
-              <DialogActions>
-                <Button onClick={handleClose}>Cancel</Button>
-                <Button onClick={handleSave}>Send</Button>
-              </DialogActions>
-            </Dialog>
-            <ToastContainer />
+                {careerLevelEl === careerLevel && (
+                  <Typography
+                    fontSize={18}
+                    sx={{ mt: 1, color: careerLevelEl === evaluatedCareerLevel ? '#FFF' : '#1976d2' }}>
+                    Current Career Level
+                  </Typography>
+                )}
+                {careerLevelEl === evaluatedCareerLevel && (
+                  <Typography fontSize={18} color="#ffffff" sx={{ mt: 1 }}>
+                    Evaluated Career Level
+                  </Typography>
+                )}
+              </CardContent>
+            </Card>
           </Box>
+        ))}
+      </Box>
+
+      {careerPaths[0] && (
+        <Box display="flex" flexDirection="column" alignItems="center" mt={3}>
+          <Typography variant="h6" mt={3}>
+            Skills for <b>{careerPaths[0].name}</b> Career Path
+          </Typography>
+          {careerPaths[0].skills.length > 0 ? (
+            careerPaths[0].skills.map((skill, index) => (
+              <Box key={index} sx={{ marginBottom: 2, width: '400px' }}>
+                <Typography variant="body1" fontWeight="bold" mb={1}>
+                  {skill.name}
+                </Typography>
+                <Select
+                  sx={{ width: '100%', marginBottom: '16px' }}
+                  defaultValue={0}
+                  onChange={(event) => {
+                    const newProficiencies = [...selectedProficiencies];
+                    newProficiencies[index] = Number(event.target.value);
+                    setSelectedProficiencies(newProficiencies);
+                  }}>
+                  <MenuItem value={0} disabled>
+                    Select proficiency
+                  </MenuItem>
+                  <MenuItem value={1}>Beginner</MenuItem>
+                  <MenuItem value={2}>Medium</MenuItem>
+                  <MenuItem value={3}>Advanced</MenuItem>
+                  <MenuItem value={4}>Master</MenuItem>
+                  <MenuItem value={5}>Expert</MenuItem>
+                </Select>
+              </Box>
+            ))
+          ) : (
+            <Typography>No skills available for this career path</Typography>
+          )}
+
+          {careerPaths[0].skills.length > 0 && (
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '400px', mt: 2 }}>
+              <Button
+                onClick={calculateCareerLevel}
+                sx={{
+                  backgroundColor: '#1976d2',
+                  color: 'white',
+                  padding: '8px 16px',
+                  borderRadius: '8px',
+                  ':hover': { backgroundColor: '#1565c0' },
+                  fontSize: '16px'
+                }}>
+                Evaluate 🎉
+              </Button>
+              <Button variant="outlined" color="primary" onClick={handleClickOpen}>
+                Book Meeting
+              </Button>
+            </Box>
+          )}
+        </Box>
       )}
-      </>
+
+      <Dialog open={open} onClose={handleClose} fullWidth>
+        <DialogTitle fontSize={32}>Book a Meeting With Owner</DialogTitle>
+        <DialogContent>
+          <Typography mb={2} fontSize={18}>
+            Owner: <b>{owners.length > 0 ? `${owners[0].firstName} ${owners[0].lastName}` : 'No owners available'}</b>
+          </Typography>
+          <Typography mt={2} mb={2} fontSize={20}>
+            Score: {`${score.toPrecision(4)} (${evaluatedCareerLevel})`}
+          </Typography>
+          <TextField
+            autoFocus
+            margin="dense"
+            id="date"
+            label="Meeting Date"
+            type="datetime-local"
+            fullWidth
+            value={date}
+            onChange={(e) => setDate(e.target.value)}
+            InputLabelProps={{
+              shrink: true
+            }}
+            required
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose}>Cancel</Button>
+          <Button onClick={handleSave}>Send</Button>
+        </DialogActions>
+      </Dialog>
+      <ToastContainer />
+    </>
   );
 };
 

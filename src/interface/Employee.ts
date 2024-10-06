@@ -1,3 +1,5 @@
+import { Feedback } from './Feedback';
+
 enum CareerLevel {
   JUNIOR,
   MID,
@@ -14,4 +16,5 @@ export interface Employee {
   position: string;
   department: string;
   careerLevel: CareerLevel;
+  feedback: Feedback[];
 }

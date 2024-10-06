@@ -4,6 +4,7 @@ import { RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar, Tooltip,
 import TrackChangesIcon from '@mui/icons-material/TrackChanges';
 
 const Statistics = () => {
+  // TODO: get from career path skills
   const data = [
     { subject: 'Negotiation', A: 120, B: 110 },
     { subject: 'Leadership', A: 98, B: 130 },

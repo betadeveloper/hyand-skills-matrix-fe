@@ -9,9 +9,8 @@ import {
   CssBaseline,
   Link,
   Grid,
-  Avatar,
+  Avatar
 } from '@mui/material';
-
 import { Lock } from '@mui/icons-material';
 import { useForm } from 'react-hook-form';
 import theme from '../../theme';
@@ -25,7 +24,7 @@ export default function Login() {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors }
   } = useForm<FormData>();
 
   const [errorMessage, setErrorMessage] = useState<string>('');
@@ -38,7 +37,11 @@ export default function Login() {
         navigate('/');
       })
       .catch((error) => {
-        setErrorMessage(error.message);
+        if (error.response && error.response.status === 403) {
+          setErrorMessage('Incorrect login credentials');
+        } else {
+          setErrorMessage('An error occurred. Please try again.');
+        }
       });
   };
 
@@ -58,21 +61,15 @@ export default function Login() {
             marginTop: 12,
             display: 'flex',
             flexDirection: 'column',
-            alignItems: 'center',
-          }}
-        >
+            alignItems: 'center'
+          }}>
           <Avatar sx={{ m: 1, bgcolor: '#D8DAFF', width: 55, height: 55 }}>
             <Lock sx={{ fontSize: 40, color: '#000' }} />
           </Avatar>
           <Typography component="h1" variant="h5" fontWeight={'medium'}>
             Login Form
           </Typography>
-          <Box
-            component="form"
-            onSubmit={handleSubmit(onSubmit)}
-            noValidate
-            sx={{ mt: 1 }}
-          >
+          <Box component="form" onSubmit={handleSubmit(onSubmit)} noValidate sx={{ mt: 1 }}>
             <TextField
               margin="normal"
               required
@@ -85,8 +82,8 @@ export default function Login() {
                 required: 'Please enter your email',
                 pattern: {
                   value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+.[A-Z]{2,}$/i,
-                  message: 'Please enter a valid email address',
-                },
+                  message: 'Please enter a valid email address'
+                }
               })}
               error={!!errors.email}
               helperText={errors.email?.message}
@@ -100,17 +97,12 @@ export default function Login() {
               id="password"
               autoComplete="current-password"
               {...register('password', {
-                required: 'Please enter your password',
+                required: 'Please enter your password'
               })}
               error={!!errors.password}
               helperText={errors.password?.message}
             />
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              sx={{ mt: 3, mb: 2 }}
-            >
+            <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
               Log In
             </Button>
             <Grid container>

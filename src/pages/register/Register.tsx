@@ -89,11 +89,14 @@ export default function Register() {
                   label="First name"
                   autoFocus
                   {...register('firstName', {
-                    required: 'Please enter your First name',
-                    minLength: { value: 2, message: 'First name must be at least 2 letters' }
+                    required: 'First name is required.',
+                    minLength: {
+                      value: 2,
+                      message: 'First name must be at least 2 characters long.'
+                    }
                   })}
-                  error={!!errors.email}
-                  helperText={errors.email?.message}
+                  error={!!errors.firstName}
+                  helperText={errors.firstName?.message}
                 />
               </Grid>
               <Grid item xs={6}>
@@ -105,11 +108,14 @@ export default function Register() {
                   label="Last name"
                   autoFocus
                   {...register('lastName', {
-                    required: 'Please enter your Last name',
-                    minLength: { value: 2, message: 'Last name must be at least 2 letters' }
+                    required: 'Last name is required.',
+                    minLength: {
+                      value: 2,
+                      message: 'Last name must be at least 2 characters long.'
+                    }
                   })}
-                  error={!!errors.email}
-                  helperText={errors.email?.message}
+                  error={!!errors.lastName}
+                  helperText={errors.lastName?.message}
                 />
               </Grid>
             </Grid>
@@ -122,10 +128,10 @@ export default function Register() {
                 label="Email Address"
                 autoFocus
                 {...register('email', {
-                  required: 'Please enter your Email',
+                  required: 'Email is required.',
                   pattern: {
                     value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
-                    message: 'Please enter a valid input'
+                    message: 'Please enter a valid email address (e.g., example@domain.com).'
                   }
                 })}
                 error={!!errors.email}
@@ -142,7 +148,16 @@ export default function Register() {
                 id="password"
                 autoComplete="current-password"
                 {...register('password', {
-                  required: 'Please enter your password'
+                  required: 'Password is required.',
+                  minLength: {
+                    value: 8,
+                    message: 'Password must be at least 8 characters long.'
+                  },
+                  pattern: {
+                    value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
+                    message:
+                      'Password must contain at least 1 uppercase letter, 1 lowercase letter, 1 digit, and 1 special character.'
+                  }
                 })}
                 error={!!errors.password}
                 helperText={errors.password?.message}
@@ -158,7 +173,7 @@ export default function Register() {
                 id="confirm-password"
                 autoComplete="current-password"
                 {...register('confirmPassword', {
-                  validate: (value) => value === password || 'The passwords do not match'
+                  validate: (value) => value === password || 'Passwords do not match.'
                 })}
                 error={!!errors.confirmPassword}
                 helperText={errors.confirmPassword?.message}
@@ -185,7 +200,7 @@ export default function Register() {
           <Typography variant="body2" color="textSecondary" align="center">
             By registering, you agree to our
             <Link href="/tos"> Terms of Service</Link> and
-            <Link href="/privary-policy"> Privacy Policy</Link>.
+            <Link href="/privacy-policy"> Privacy Policy</Link>.
           </Typography>
         </Box>
       </Container>

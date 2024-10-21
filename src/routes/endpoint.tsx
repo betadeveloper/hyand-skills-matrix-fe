@@ -9,5 +9,6 @@ export enum Endpoint {
   REGISTER = 'register',
   GOALS = 'goals',
   TOS = 'tos',
-  PRIVACYPOLICY = 'privacy-policy'
+  PRIVACYPOLICY = 'privacy-policy',
+  CAREER_PATHS = 'career-paths'
 }

@@ -18,6 +18,8 @@ import { get, post, put } from '../../api/api.ts';
 import { ToastContainer, toast } from 'react-toastify';
 import Confetti from 'react-confetti';
 import { useWindowSize } from 'react-use';
+import { Link } from 'react-router-dom';
+import { Endpoint } from '../../routes/endpoint.tsx';
 
 const Career = () => {
   enum CareerLevel {
@@ -157,6 +159,9 @@ const Career = () => {
           sx={{ height: '24px', borderRadius: '12px' }}
         />
       </Box>
+      <Button component={Link} to={'/' + Endpoint.CAREER_PATHS} variant="contained" color="primary">
+        Add New Career Paths
+      </Button>
       <Box display={'flex'} mt={4} justifyContent="space-around">
         {careerLevels.map((careerLevelEl: CareerLevel, index: number) => (
           <Box key={index} flex={1}>

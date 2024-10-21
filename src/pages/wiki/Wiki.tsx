@@ -20,16 +20,16 @@ const Wiki = () => {
   const fetchDocuments = async () => {
     try {
       const url = selectedCategory === 'All' ? '/api/wiki' : `/api/wiki/category/${selectedCategory}`;
-      const response = await get(url);
+      const response: any = await get(url);
       setDocuments(response);
     } catch (error) {
       console.error('Error fetching wiki documents', error);
     }
   };
 
-  const handleFileUpload = (e) => setFile(e.target.files[0]);
+  const handleFileUpload = (e: any) => setFile(e.target.files[0]);
 
-  const downloadDocument = async (documentId) => {
+  const downloadDocument = async (documentId: number) => {
     const url = `/api/wiki/download/${documentId}`;
 
     try {
@@ -87,7 +87,7 @@ const Wiki = () => {
 
   return (
     <Box ml={4}>
-      <Box display={'flex'} flexDirection={'row'} alignItems={'center'}>
+      {/* <Box display={'flex'} flexDirection={'row'} alignItems={'center'}>
         <AutoStories color="primary" style={{ fontSize: 50, marginRight: 10 }} />
         <h1>Wiki</h1>
       </Box>
@@ -122,7 +122,6 @@ const Wiki = () => {
         )}
       </Box>
 
-      {/* Upload Modal */}
       <Modal open={showUploadModal} onClose={() => setShowUploadModal(false)}>
         <Box p={4} style={{ background: '#fff', margin: 'auto', marginTop: '5%', width: '50%' }}>
           <Typography variant="h5" mb={2}>
@@ -145,7 +144,7 @@ const Wiki = () => {
             Upload
           </Button>
         </Box>
-      </Modal>
+      </Modal> */}
     </Box>
   );
 };

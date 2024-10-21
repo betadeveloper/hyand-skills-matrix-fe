@@ -17,6 +17,7 @@ import ProtectedRoute from './ProtectedRoute.tsx';
 import Goals from '../pages/goals/Goals.tsx';
 import PrivacyPolicy from '../pages/privacy-policy/PrivacyPolicy.tsx';
 import Tos from '../pages/tos/Tos.tsx';
+import CareerPaths from '../pages/career/CareerPaths.tsx';
 
 type MyErrorBoundaryProps = {
   children: React.ReactNode;
@@ -100,6 +101,10 @@ const routeOptions: RouteObject[] = [
       {
         path: Endpoint.GOALS,
         element: <ProtectedRoute path={Endpoint.GOALS} element={<Goals />} />
+      },
+      {
+        path: Endpoint.CAREER_PATHS,
+        element: <ProtectedRoute path={Endpoint.CAREER_PATHS} element={<CareerPaths />} />
       }
     ]
   },

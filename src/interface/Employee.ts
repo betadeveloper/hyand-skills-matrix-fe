@@ -17,4 +17,6 @@ export interface Employee {
   department: string;
   careerLevel: CareerLevel;
   feedback: Feedback[];
+  careerPathId: number;
+  currentRole: string;
 }

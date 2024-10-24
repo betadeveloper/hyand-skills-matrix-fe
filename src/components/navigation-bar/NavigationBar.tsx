@@ -91,7 +91,6 @@ export default function NavigationBar() {
               </MenuItem>
               <MenuItem onClick={handleLogOut}>Log out</MenuItem>
             </Menu>
-            <TypeSearch />
           </div>
           <IconButton
             size="large"

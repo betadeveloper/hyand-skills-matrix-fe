@@ -1,27 +1,10 @@
 import { Box } from '@mui/material';
-import InformationCard from '../../components/information-card/InformationCard';
-import { DonutSmall, Group, TrackChanges } from '@mui/icons-material/';
 import head from '../../assets/images/head.jpg';
-import { Endpoint } from '../../routes/endpoint.tsx';
-import { get } from '../../api/api.ts';
-import { useEffect, useState } from 'react';
+import GoalsCard from '../../components/goals-card/GoalsCard.tsx';
+import ProgressCard from '../../components/progress-card/ProgressCard.tsx';
+import OwnersCard from '../../components/owners-card/OwnersCard.tsx';
 
 const MainPage = () => {
-  const [owners, setOwners] = useState([]);
-  const [goals, setGoals] = useState([]);
-
-  useEffect(() => {
-    get('http://localhost:8080/api/owners/currentEmployee').then((response: any) => {
-      setOwners(response);
-    });
-
-    get('http://localhost:8080/api/goals/currentEmployee').then((response: any) => {
-      setGoals(response);
-    });
-
-    localStorage.setItem('selectedNavItem', 'Home');
-  }, [goals]);
-
   return (
     <>
       <Box
@@ -33,28 +16,26 @@ const MainPage = () => {
           backgroundPosition: 'center'
         }}
       />
-      <InformationCard
-        IconComponent={DonutSmall}
-        title={'Goals'}
-        buttonText={'View details'}
-        goals={goals}
-        linkEndpoint={Endpoint.GOALS}
-        actionButton={true}
-        actionButtonText="Add goal"
-      />
-      <InformationCard
-        IconComponent={TrackChanges}
-        title={'Progress'}
-        buttonText={'View details'}
-        linkEndpoint={Endpoint.STATISTICS}
-      />
-      <InformationCard
-        IconComponent={Group}
-        title={'Owners'}
-        buttonText={'View Details'}
-        owners={owners}
-        actionButton={true}
-        actionButtonText="Add owners"></InformationCard>
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'center',
+          flexDirection: 'row',
+          flexWrap: 'wrap',
+          gap: 2,
+          padding: 2
+        }}
+      >
+        <Box sx={{ width: '500px' }}>
+          <GoalsCard />
+        </Box>
+        <Box sx={{ width: '500px' }}>
+          <ProgressCard />
+        </Box>
+        <Box sx={{ width: '500px' }}>
+          <OwnersCard />
+        </Box>
+      </Box>
     </>
   );
 };

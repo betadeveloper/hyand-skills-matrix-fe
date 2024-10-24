@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { get, post } from '../../api/api.ts';
+import { get, post, remove, put } from '../../api/api.ts';
 import {
   Box,
   Typography,
@@ -14,15 +14,24 @@ import {
   Checkbox,
   ListItemText,
   ListItemIcon,
-  IconButton
+  IconButton,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle
 } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import CloseIcon from '@mui/icons-material/Close';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import DeleteIcon from '@mui/icons-material/Delete';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const CareerPaths = () => {
   const [careerPaths, setCareerPaths] = useState<CareerPath[]>([]);
   const [employees, setEmployees] = useState<Employee[]>([]);
+  const [assignedEmployees, setAssignedEmployees] = useState<Employee[]>([]);
   const [selectedEmployees, setSelectedEmployees] = useState<number[]>([]);
   const [newCareerPath, setNewCareerPath] = useState<CareerPath>({
     id: 0,
@@ -31,7 +40,19 @@ const CareerPaths = () => {
     skills: []
   });
   const [showInputs, setShowInputs] = useState(false);
-  const [openModal, setOpenModal] = useState(false);
+  const [assignEmployeeModalOpen, setAssignEmployeeModalOpen] = useState(false);
+  const [viewEmployeesAndSkillsModalOpen, setViewEmployeesAndSkillsModalOpen] = useState(false);
+  const [deleteConfirmationOpen, setDeleteConfirmationOpen] = useState(false);
+  const [careerPathToDelete, setCareerPathToDelete] = useState<number | null>(null);
+  const [selectedCareerPathId, setSelectedCareerPathId] = useState<number | null>(null);
+  const [skills, setSkills] = useState<Skill[]>([]);
+  const [newSkill, setNewSkill] = useState<Skill>({
+    id: 0,
+    name: '',
+    description: '',
+    proficiency: 0,
+    weight: 0,
+  });
 
   const navigate = useNavigate();
 
@@ -52,7 +73,8 @@ const CareerPaths = () => {
 
   interface Employee {
     id: number;
-    name: string;
+    firstName: string;
+    lastName: string;
   }
 
   useEffect(() => {
@@ -74,7 +96,23 @@ const CareerPaths = () => {
         skills: []
       });
       setShowInputs(false);
+      toast.success('Career path created successfully!');
     });
+  };
+
+  const handleConfirmDeleteCareerPath = (id: number) => {
+    setCareerPathToDelete(id);
+    setDeleteConfirmationOpen(true);
+  };
+
+  const handleDeleteCareerPath = () => {
+    if (careerPathToDelete !== null) {
+      remove(`http://localhost:8080/api/careerPaths/${careerPathToDelete}`).then(() => {
+        setCareerPaths(careerPaths.filter((careerPath) => careerPath.id !== careerPathToDelete));
+        setDeleteConfirmationOpen(false);
+        toast.success('Career path deleted successfully!');
+      });
+    }
   };
 
   const handleShowInputs = () => {
@@ -85,12 +123,28 @@ const CareerPaths = () => {
     setShowInputs(false);
   };
 
-  const handleOpenModal = () => {
-    setOpenModal(true);
+  const handleOpenAssignEmployeeModal = (id: number) => {
+    setSelectedCareerPathId(id);
+    setAssignEmployeeModalOpen(true);
   };
 
-  const handleCloseModal = () => {
-    setOpenModal(false);
+  const handleCloseAssignEmployeeModal = () => {
+    setAssignEmployeeModalOpen(false);
+    setSelectedEmployees([]);
+  };
+
+  const handleOpenViewEmployeesAndSkillsModal = (id: number) => {
+    setSelectedCareerPathId(id);
+    get(`http://localhost:8080/api/skills/${id}`).then((response: any) => {
+      setSkills(response);
+    });
+    setViewEmployeesAndSkillsModalOpen(true);
+  };
+
+  const handleCloseViewEmployeesAndSkillsModal = () => {
+    setViewEmployeesAndSkillsModalOpen(false);
+    setSelectedEmployees([]);
+    setSkills([]);
   };
 
   const handleToggleEmployee = (id: number) => {
@@ -103,7 +157,33 @@ const CareerPaths = () => {
 
   const handleAssignEmployees = () => {
     console.log('Assigned Employees:', selectedEmployees);
-    handleCloseModal();
+    handleCloseAssignEmployeeModal();
+    toast.success('Employees assigned successfully!');
+  };
+
+  const handleCreateSkill = () => {
+    if (selectedCareerPathId) {
+      post(`http://localhost:8080/api/skills/${selectedCareerPathId}`, newSkill).then((response: any) => {
+        setSkills([...skills, response]);
+        setNewSkill({ id: 0, name: '', description: '', proficiency: 0, weight: 0 });
+        toast.success('Skill created successfully!');
+      });
+    }
+  };
+
+  const handleDeleteSkill = (id: number) => {
+    remove(`http://localhost:8080/api/skills/${id}`).then(() => {
+      setSkills(skills.filter(skill => skill.id !== id));
+      toast.success('Skill deleted successfully!');
+    });
+  };
+
+  const handleUpdateSkill = (id: number) => {
+    put(`http://localhost:8080/api/skills/${id}`, newSkill).then((response: any) => {
+      setSkills(skills.map(skill => (skill.id === id ? response : skill)));
+      setNewSkill({ id: 0, name: '', description: '', proficiency: 0, weight: 0 });
+      toast.success('Skill updated successfully!');
+    });
   };
 
   const handleGoBack = () => {
@@ -112,6 +192,7 @@ const CareerPaths = () => {
 
   return (
     <Box maxWidth={800} margin="40px auto" padding={2}>
+      <ToastContainer />
       <Box display="flex" justifyContent="flex-start" mb={2}>
         <Button startIcon={<ArrowBackIcon />} variant="outlined" onClick={handleGoBack}>
           Go Back
@@ -126,16 +207,24 @@ const CareerPaths = () => {
           <Paper key={careerPath.id} elevation={3} style={{ margin: '16px 0', padding: '16px' }}>
             <ListItem>
               <Box flexGrow={1}>
-                <Typography variant="h6" gutterBottom>
+                <Typography
+                  variant="h6"
+                  gutterBottom
+                  onClick={() => handleOpenViewEmployeesAndSkillsModal(careerPath.id)}
+                  style={{ cursor: 'pointer' }}
+                >
                   {careerPath.name}
                 </Typography>
                 <Typography variant="body2" color="textSecondary">
                   {careerPath.description}
                 </Typography>
               </Box>
-              <Button variant="outlined" onClick={handleOpenModal}>
+              <Button variant="outlined" onClick={() => handleOpenAssignEmployeeModal(careerPath.id)}>
                 Assign Employees
               </Button>
+              <IconButton onClick={() => handleConfirmDeleteCareerPath(careerPath.id)}>
+                <DeleteIcon />
+              </IconButton>
             </ListItem>
           </Paper>
         ))}
@@ -173,26 +262,14 @@ const CareerPaths = () => {
         <Box display="flex" justifyContent="center" marginTop={4}>
           <Fab variant="extended" color="primary" aria-label="add" onClick={handleShowInputs}>
             <AddIcon sx={{ mr: 1 }} />
-            Add
+            Create Career Path
           </Fab>
         </Box>
       )}
 
       {/* Modal for Assigning Employees */}
-      <Modal open={openModal} onClose={handleCloseModal}>
-        <Box
-          width={400}
-          padding={4}
-          bgcolor="background.paper"
-          borderRadius={2}
-          margin="100px auto"
-          boxShadow={3}
-          position="relative">
-          {/* Close (X) Button for Modal */}
-          <IconButton style={{ position: 'absolute', right: 8, top: 8 }} onClick={handleCloseModal}>
-            <CloseIcon />
-          </IconButton>
-
+      <Modal open={assignEmployeeModalOpen} onClose={handleCloseAssignEmployeeModal}>
+        <Box style={{ top: '50%', left: '50%', transform: 'translate(-50%, -50%)', position: 'absolute', width: 400, backgroundColor: 'white', padding: '16px', borderRadius: '8px' }}>
           <Typography variant="h6" gutterBottom>
             Assign Employees
           </Typography>
@@ -200,27 +277,120 @@ const CareerPaths = () => {
             {employees.map((employee) => (
               <ListItem key={employee.id} button onClick={() => handleToggleEmployee(employee.id)}>
                 <ListItemIcon>
-                  <Checkbox
-                    edge="start"
-                    checked={selectedEmployees.includes(employee.id)}
-                    tabIndex={-1}
-                    disableRipple
-                  />
+                  <Checkbox checked={selectedEmployees.includes(employee.id)} />
                 </ListItemIcon>
-                <ListItemText primary={employee.name} />
+                <ListItemText primary={`${employee.firstName} ${employee.lastName}`} />
               </ListItem>
             ))}
           </List>
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={handleAssignEmployees}
-            fullWidth
-            style={{ marginTop: '16px' }}>
-            Assign
-          </Button>
+          <Box display="flex" justifyContent="space-between" marginTop={2}>
+            <Button variant="outlined" color="primary" onClick={handleCloseAssignEmployeeModal}>
+              Cancel
+            </Button>
+            <Button variant="contained" color="primary" onClick={handleAssignEmployees}>
+              Assign
+            </Button>
+          </Box>
         </Box>
       </Modal>
+
+      {/* Modal for Viewing Employees and Skills */}
+      <Modal open={viewEmployeesAndSkillsModalOpen} onClose={handleCloseViewEmployeesAndSkillsModal}>
+        <Box style={{ top: '50%', left: '50%', transform: 'translate(-50%, -50%)', position: 'absolute', width: 600, backgroundColor: 'white', padding: '16px', borderRadius: '8px' }}>
+          <Typography variant="h6" gutterBottom>
+            Assigned Employees and Skills
+          </Typography>
+          <Typography variant="subtitle1" gutterBottom>
+            Employees:
+          </Typography>
+          <List>
+            {assignedEmployees.map((employee) => (
+              <ListItem key={employee.id}>
+                <ListItemText primary={`${employee.firstName} ${employee.lastName}`} />
+              </ListItem>
+            ))}
+          </List>
+          <Typography variant="subtitle1" gutterBottom>
+            Skills:
+          </Typography>
+          <List>
+            {skills.map((skill) => (
+              <Paper key={skill.id} elevation={3} style={{ margin: '8px 0', padding: '8px' }}>
+                <ListItem>
+                  <Box flexGrow={1}>
+                    <Typography variant="h6" gutterBottom>
+                      {skill.name}
+                    </Typography>
+                    <Typography variant="body2" color="textSecondary">
+                      {skill.description}
+                    </Typography>
+                  </Box>
+                  <IconButton onClick={() => handleDeleteSkill(skill.id)}>
+                    <DeleteIcon />
+                  </IconButton>
+                </ListItem>
+              </Paper>
+            ))}
+          </List>
+
+          <Box marginTop={4}>
+            <Typography variant="h6">Create New Skill</Typography>
+            <TextField
+              label="Skill Name"
+              value={newSkill.name}
+              onChange={(e) => setNewSkill({ ...newSkill, name: e.target.value })}
+              fullWidth
+              margin="normal"
+            />
+            <TextField
+              label="Skill Description"
+              value={newSkill.description}
+              onChange={(e) => setNewSkill({ ...newSkill, description: e.target.value })}
+              fullWidth
+              margin="normal"
+              multiline
+              rows={2}
+            />
+            <TextField
+              label="Proficiency"
+              value={newSkill.proficiency}
+              onChange={(e) => setNewSkill({ ...newSkill, proficiency: Number(e.target.value) })}
+              fullWidth
+              margin="normal"
+              type="number"
+            />
+            <TextField
+              label="Weight"
+              value={newSkill.weight}
+              onChange={(e) => setNewSkill({ ...newSkill, weight: Number(e.target.value) })}
+              fullWidth
+              margin="normal"
+              type="number"
+            />
+            <Box display="flex" justifyContent="space-between" marginTop={2}>
+              <Button variant="contained" color="primary" onClick={handleCreateSkill}>
+                Add Skill
+              </Button>
+            </Box>
+          </Box>
+        </Box>
+      </Modal>
+
+      {/* Dialog for delete confirmation */}
+      <Dialog open={deleteConfirmationOpen} onClose={() => setDeleteConfirmationOpen(false)}>
+        <DialogTitle>Confirm Delete</DialogTitle>
+        <DialogContent>
+          <DialogContentText>Are you sure you want to delete this career path?</DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setDeleteConfirmationOpen(false)} color="primary">
+            Cancel
+          </Button>
+          <Button onClick={handleDeleteCareerPath} color="primary">
+            Delete
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 };

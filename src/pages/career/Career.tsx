@@ -59,6 +59,7 @@ const Career = () => {
   const [position, setPosition] = useState<string>('');
   const [department, setDepartment] = useState<string>('');
   const [careerLevel, setCareerLevel] = useState<CareerLevel>();
+  const [roles, setRoles] = useState<string[]>([]);
   const [evaluatedCareerLevel, setEvaluatedCareerLevel] = useState<CareerLevel>();
   const [owners, setOwners] = useState<any[]>([]);
 
@@ -81,6 +82,7 @@ const Career = () => {
       setPosition(response.position);
       setDepartment(response.department);
       setCareerLevel(response.careerLevel);
+      setRoles(response.roles);
     });
     get('http://localhost:8080/api/careerPaths').then((response: any) => {
       setCareerPaths(response);
@@ -159,9 +161,6 @@ const Career = () => {
           sx={{ height: '24px', borderRadius: '12px' }}
         />
       </Box>
-      <Button component={Link} to={'/' + Endpoint.CAREER_PATHS} variant="contained" color="primary">
-        Add New Career Paths
-      </Button>
       <Box display={'flex'} mt={4} justifyContent="space-around">
         {careerLevels.map((careerLevelEl: CareerLevel, index: number) => (
           <Box key={index} flex={1}>
@@ -196,6 +195,14 @@ const Career = () => {
             </Card>
           </Box>
         ))}
+      </Box>
+
+      <Box display="flex" justifyContent="flex-end">
+        {roles.includes('ROLE_ADMIN') || roles.includes('ROLE_OWNER') ? (
+          <Button component={Link} to={'/' + Endpoint.CAREER_PATHS} variant="contained" color="primary">
+            Add New Career Paths
+          </Button>
+        ) : null}
       </Box>
 
       {careerPaths[0] && (
@@ -233,7 +240,7 @@ const Career = () => {
           )}
 
           {careerPaths[0].skills.length > 0 && (
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '400px', mt: 2 }}>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '400px'}}>
               <Button
                 onClick={calculateCareerLevel}
                 sx={{

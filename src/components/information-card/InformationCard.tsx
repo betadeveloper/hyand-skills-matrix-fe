@@ -22,7 +22,7 @@ import { get, post, remove } from '../../api/api.ts';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import CloseIcon from '@mui/icons-material/Close';
-import { Employee } from '../../interface/Employee.tsx';
+import { Employee } from '../../interface/Employee.ts';
 
 interface InformationCardProps {
   IconComponent: React.ElementType<SvgIconProps>;
@@ -52,13 +52,13 @@ export default function InformationCard({
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [dueDate, setDueDate] = useState(new Date().toISOString().substring(0, 10));
-  const [employees, setEmployees] = useState<Employee[]>([]);
+  const [employee, setEmployee] = useState<Employee>();
   const [ownerDialogOpen, setOwnerDialogOpen] = useState(false);
   const [selectedEmployee, setSelectedEmployee] = useState<Employee>();
 
   useEffect(() => {
-    get('http://localhost:8080/api/employees').then((response: unknown) => {
-      setEmployees(response as Employee[]);
+    get('http://localhost:8080/api/employee/current').then((response: any) => {
+      setEmployee(response);
     });
   }, []);
 

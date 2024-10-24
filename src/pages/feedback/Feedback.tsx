@@ -34,9 +34,9 @@ const Feedback = () => {
 
   return (
     <Box display={'flex'} flexDirection={'column'} alignItems={'center'} ml={5}>
-      <Box display={'flex'} flexDirection={'row'} alignItems={'center'} mb={3}>
+      <Box display={'flex'} flexDirection={'row'} alignItems={'center'} mb={3} mt={3}>
         <AutoStories color="primary" style={{ fontSize: 50, marginRight: 10 }} />
-        <Typography variant="h3" fontWeight={600} color="primary">
+        <Typography variant="h3" fontWeight={600}>
           Feedback
         </Typography>
       </Box>
@@ -69,7 +69,7 @@ const Feedback = () => {
           ))}
         </Box>
       ) : (
-        <Typography>Loading feedback...</Typography>
+        <Typography>No feedback available yet</Typography>
       )}
     </Box>
   );

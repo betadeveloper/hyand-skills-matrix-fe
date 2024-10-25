@@ -53,7 +53,7 @@ const Goals = () => {
         <CircularProgress />
       ) : (
         goals.map((goal, index) => (
-          <Card key={goal.id} variant="outlined" sx={{ mb: 2, padding: 2, borderRadius: 2, boxShadow: 3 }}>
+          <Card key={goal.id} variant="outlined" sx={{ mb: 4, padding: 2, borderRadius: 2, boxShadow: 3 }}>
             <CardContent>
               <Typography variant="h6">
                 {index + 1}. {goal.name}

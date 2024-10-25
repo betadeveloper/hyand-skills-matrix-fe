@@ -133,18 +133,21 @@ const GoalsCard = () => {
             value={name}
             onChange={(e) => setName(e.target.value)}
             fullWidth
+            sx={{ mb: 2, mt: 1 }}
           />
           <TextField
             label="Goal Description"
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             fullWidth
+            sx={{ mb: 2 }}
           />
           <TextField
             label="Due Date"
             type="date"
             value={dueDate}
             onChange={(e) => setDueDate(e.target.value)}
+            sx={{ mb:2}}
           />
         </DialogContent>
         <DialogActions>

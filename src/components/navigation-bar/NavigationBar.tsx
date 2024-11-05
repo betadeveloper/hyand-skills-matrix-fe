@@ -47,6 +47,7 @@ export default function NavigationBar() {
     { to: Endpoint.CAREER, icon: <AssignmentInd sx={{ color: 'black' }} />, text: 'Career' },
     { to: Endpoint.FEEDBACK, icon: <InsertComment sx={{ color: 'black' }} />, text: 'Feedback' },
     { to: Endpoint.WIKI, icon: <AutoStories sx={{ color: 'black' }} />, text: 'Wiki' },
+    { to: Endpoint.REVIEW_PORTAL, icon: <AutoStories sx={{ color: 'black' }} />, text: 'Review Portal' },
   ];
 
   const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
@@ -155,6 +156,7 @@ export default function NavigationBar() {
               component={Link}
               to={item.to}
               onClick={() => handleNavItemClick(item.text)}
+              textAlign={'center'}
               sx={{
                 display: 'flex',
                 flexDirection: 'column',

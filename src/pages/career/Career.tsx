@@ -117,6 +117,18 @@ const Career = () => {
     setOpen(false);
   };
 
+  const handleSubmitReviewRequest = () => {
+    post('http://localhost:8080/api/review/createReviewRequest')
+      .then(() => {
+        toast.success('Review request created successfully!');
+        handleCloseReviewDialog(); // Close the dialog on success
+      })
+      .catch((error) => {
+        toast.error('Failed to create review request: ' + error.message);
+      });
+  };
+
+
   const calculateCareerLevel = () => {
     if (careerPaths.length > 0) {
       const weights = skills.map((skill) => skill.weight);
@@ -260,7 +272,7 @@ const Career = () => {
                 Evaluate 🎉
               </Button>
               <Button variant="outlined" color="primary" onClick={handleClickOpen}>
-                Book Meeting
+                Book Review
               </Button>
             </Box>
           )}
@@ -268,32 +280,21 @@ const Career = () => {
       )}
 
       <Dialog open={open} onClose={handleClose} fullWidth>
-        <DialogTitle fontSize={32}>Book a Meeting With Owner</DialogTitle>
+        <DialogTitle fontSize={32}>Book Review From Owner</DialogTitle>
         <DialogContent>
           <Typography mb={2} fontSize={18}>
             Owner: <b>{owners.length > 0 ? `${owners[0].firstName} ${owners[0].lastName}` : 'No owners available'}</b>
           </Typography>
           <Typography mt={2} mb={2} fontSize={20}>
-            Score: {`${score.toPrecision(4)} (${evaluatedCareerLevel})`}
+            Score: {score ? score.toPrecision(4) : 'N/A'}
           </Typography>
-          <TextField
-            autoFocus
-            margin="dense"
-            id="date"
-            label="Meeting Date"
-            type="datetime-local"
-            fullWidth
-            value={date}
-            onChange={(e) => setDate(e.target.value)}
-            InputLabelProps={{
-              shrink: true
-            }}
-            required
-          />
+          <Typography fontSize={20}>
+            Career Level: {evaluatedCareerLevel ? evaluatedCareerLevel : 'N/A'}
+          </Typography>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Cancel</Button>
-          <Button onClick={handleSave}>Send</Button>
+          <Button onClick={handleSubmitReviewRequest}>Send</Button>
         </DialogActions>
       </Dialog>
       <ToastContainer />

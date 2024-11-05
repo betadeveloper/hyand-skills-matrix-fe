@@ -44,7 +44,7 @@ const GoalsCard = () => {
       })
       .catch((error) => {
         console.error("Error adding goal:", error);
-        toast.error('Failed to add goal. Please try again.');
+        toast.error('Failed to add goal.');
       });
   };
 
@@ -56,7 +56,7 @@ const GoalsCard = () => {
       })
       .catch((error) => {
         console.error("Error deleting goal:", error);
-        toast.error('Failed to delete goal. Please try again.');
+        toast.error('Failed to delete goal.');
       });
   };
 

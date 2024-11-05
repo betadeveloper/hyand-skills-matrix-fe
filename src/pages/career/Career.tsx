@@ -69,6 +69,7 @@ const Career = () => {
   const [open, setOpen] = useState(false);
   const [date, setDate] = useState('');
   const [showConfetti, setShowConfetti] = useState(false);
+  const [skills, setSkills] = useState<Skill[]>([]);
 
   const { width, height } = useWindowSize();
 
@@ -91,7 +92,12 @@ const Career = () => {
     get('http://localhost:8080/api/owners/currentEmployee').then((response: any) => {
       setOwners(response);
     });
+
+    get('http://localhost:8080/api/skills/1').then((response: Skill[]) => {
+      setSkills(response);
+    });
   }, []);
+
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -113,7 +119,7 @@ const Career = () => {
 
   const calculateCareerLevel = () => {
     if (careerPaths.length > 0) {
-      const weights = careerPaths[0].skills.map((skill) => skill.weight);
+      const weights = skills.map((skill) => skill.weight);
       const score = calculateFinalCareerPathScore(selectedProficiencies, weights);
       setScore(score);
 
@@ -210,8 +216,8 @@ const Career = () => {
           <Typography variant="h6" mt={3}>
             Skills for <b>{careerPaths[0].name}</b> Career Path
           </Typography>
-          {careerPaths[0].skills.length > 0 ? (
-            careerPaths[0].skills.map((skill, index) => (
+          {skills.length > 0 ? (
+            skills.map((skill, index) => (
               <Box key={index} sx={{ marginBottom: 2, width: '400px' }}>
                 <Typography variant="body1" fontWeight="bold" mb={1}>
                   {skill.name}
@@ -239,7 +245,7 @@ const Career = () => {
             <Typography>No skills available for this career path</Typography>
           )}
 
-          {careerPaths[0].skills.length > 0 && (
+          {skills.length > 0 && (
             <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '400px'}}>
               <Button
                 onClick={calculateCareerLevel}

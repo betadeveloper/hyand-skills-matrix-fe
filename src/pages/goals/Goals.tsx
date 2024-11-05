@@ -23,11 +23,26 @@ const Goals = () => {
     }
   };
 
-  const handleStartEndGoal = async (goal) => {
-    setLoading(true);
-    const updatedGoal = { ...goal, [goal.startDate ? 'endDate' : 'startDate']: new Date().toISOString() };
-    await put(`http://localhost:8080/api/goals/${goal.id}`, updatedGoal);
-    fetchGoals();
+  const handleStartGoal = async (goal) => {
+    const currentDate = new Date().toISOString();
+    const updatedGoal = { ...goal, startDate: currentDate };
+    try {
+      await put(`http://localhost:8080/api/goal/${goal.id}`, updatedGoal);
+      fetchGoals();
+    } catch (error) {
+      console.error("Error starting goal:", error);
+    }
+  };
+
+  const handleEndGoal = async (goal) => {
+    const currentDate = new Date().toISOString();
+    const updatedGoal = { ...goal, endDate: currentDate };
+    try {
+      await put(`http://localhost:8080/api/goal/${goal.id}`, updatedGoal);
+      fetchGoals();
+    } catch (error) {
+      console.error("Error ending goal:", error);
+    }
   };
 
   return (
@@ -41,11 +56,7 @@ const Goals = () => {
     >
       <Box display={'flex'} alignItems={'center'} justifyContent="center" mb={3} mt={3}>
         <DonutSmall color="primary" style={{ fontSize: 40, marginRight: 10 }} />
-        <Typography
-          variant="h4"
-          fontWeight="bold"
-          align="left"
-        >
+        <Typography variant="h4" fontWeight="bold" align="left">
           Goals
         </Typography>
       </Box>
@@ -53,28 +64,66 @@ const Goals = () => {
         <CircularProgress />
       ) : (
         goals.map((goal, index) => (
-          <Card key={goal.id} variant="outlined" sx={{ mb: 4, padding: 2, borderRadius: 2, boxShadow: 3 }}>
+          <Card
+            key={goal.id}
+            variant="outlined"
+            sx={{
+              mb: 4,
+              padding: 2,
+              borderRadius: 2,
+              boxShadow: 3,
+              backgroundColor: goal.endDate ? '#f5f5f5' : 'white',
+              opacity: goal.endDate ? 0.85 : 1
+            }}
+          >
             <CardContent>
-              <Typography variant="h6">
-                {index + 1}. {goal.name}
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                {goal.description ? goal.description : 'No description'}
+              <Box display="flex" justifyContent="space-between">
+                <Typography variant="h6">
+                  {index + 1}. {goal.name}
+                </Typography>
+                <Box textAlign="right">
+                  {goal.startDate && !goal.endDate && (
+                    <Typography variant="body2" color="text.secondary">
+                      Started: {new Date(goal.startDate).toLocaleString()}
+                    </Typography>
+                  )}
+                  {goal.endDate && (
+                    <Typography variant="body2" color="text.secondary">
+                      Ended: {new Date(goal.endDate).toLocaleString()}
+                    </Typography>
+                  )}
+                </Box>
+              </Box>
+              <Typography variant="body2" color="text.secondary" mt={1}>
+                {goal.description || 'No description'}
               </Typography>
               <Typography variant="body2" color="text.primary" fontWeight="bold">
                 Due: {goal.dueDate}
               </Typography>
             </CardContent>
             <CardActions>
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={() => handleStartEndGoal(goal)}
-                disabled={loading}
-                fullWidth
-              >
-                {goal.startDate ? 'End' : 'Start'}
-              </Button>
+              {!goal.startDate && (
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={() => handleStartGoal(goal)}
+                  disabled={loading}
+                  fullWidth
+                >
+                  Start
+                </Button>
+              )}
+              {goal.startDate && !goal.endDate && (
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  onClick={() => handleEndGoal(goal)}
+                  disabled={loading}
+                  fullWidth
+                >
+                  End
+                </Button>
+              )}
             </CardActions>
           </Card>
         ))

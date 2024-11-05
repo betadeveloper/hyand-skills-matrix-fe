@@ -19,7 +19,6 @@ const GoalsCard = () => {
       setGoals(response);
     }).catch((error) => {
       console.error("Error fetching goals:", error);
-      toast.error('Failed to fetch goals. Please try again.');
     });
   };
 

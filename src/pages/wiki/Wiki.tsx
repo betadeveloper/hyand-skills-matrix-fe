@@ -130,7 +130,7 @@ const Wiki = () => {
       my={4}
       sx={{ width: '100%', maxWidth: '1200px', margin: 'auto', marginTop: 3 }}
     >
-      <Box display={'flex'} flexDirection={'row'} alignItems={'center'} marginTop={3}>
+      <Box display={'flex'} flexDirection={'row'} alignItems={'center'} marginTop={3} marginBottom={3}>
         <AutoStories color="primary" style={{ fontSize: 50, marginRight: 10 }} />
         <Typography variant="h4" fontWeight="bold">Wiki</Typography>
       </Box>

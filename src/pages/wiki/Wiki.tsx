@@ -1,6 +1,5 @@
 import { Box, Button, Typography, Dialog, DialogTitle, DialogContent, TextField, DialogActions, DialogContentText, Input, Select, MenuItem, IconButton } from '@mui/material';
-import { AutoStories } from '@mui/icons-material';
-import CloseIcon from '@mui/icons-material/Close';
+import { AutoStories, Close, Add } from '@mui/icons-material';
 import { useEffect, useState } from 'react';
 import { get, post, remove } from '../../api/api';
 import { toast } from 'react-toastify';
@@ -130,16 +129,10 @@ const Wiki = () => {
       my={4}
       sx={{ width: '100%', maxWidth: '1200px', margin: 'auto', marginTop: 3 }}
     >
-      <Box display={'flex'} flexDirection={'row'} alignItems={'center'} marginTop={3} marginBottom={3}>
+      <Box display={'flex'} flexDirection={'row'} alignItems={'center'} marginTop={4} marginBottom={2}>
         <AutoStories color="primary" style={{ fontSize: 50, marginRight: 10 }} />
-        <Typography variant="h4" fontWeight="bold">Wiki</Typography>
+        <Typography variant="h1" fontWeight="600">Wiki</Typography>
       </Box>
-
-      {roles.includes('ROLE_ADMIN') || roles.includes('ROLE_OWNER') ? (
-        <Button variant="contained" color="primary" onClick={() => setShowUploadModal(true)} sx={{ mt: 2, mb: 2 }}>
-          New Document
-        </Button>
-      ) : null}
 
       <Box display="flex" flexDirection="column" alignItems="center">
         <Select
@@ -177,11 +170,11 @@ const Wiki = () => {
               </Typography>
               <Typography>{doc.description}</Typography>
               <Box display="flex" justifyContent="space-between" width="100%" mt={2}>
-                <Button variant="outlined" color="primary" onClick={() => downloadDocument(doc.id)}>
-                  Download Document
-                </Button>
-                <Button variant="outlined" color="error" onClick={() => handleDeleteConfirmation(doc.id)} sx={{ ml: 2 }}>
+                <Button variant="outlined" color="error" onClick={() => handleDeleteConfirmation(doc.id)}>
                   Delete
+                </Button>
+                <Button variant="outlined" color="primary" onClick={() => downloadDocument(doc.id)} sx={{ ml: 2 }}>
+                  Download Document
                 </Button>
               </Box>
             </Box>
@@ -191,20 +184,26 @@ const Wiki = () => {
         )}
       </Box>
 
+      {roles.includes('ROLE_ADMIN') || roles.includes('ROLE_OWNER') ? (
+        <Button variant="contained" color="primary" onClick={() => setShowUploadModal(true)} sx={{ mt: 4, mb: 2 }}>
+          <Add sx={{mr: 1}} /> New Document
+        </Button>
+      ) : null}
+
       <Dialog
         open={showUploadModal}
         onClose={() => setShowUploadModal(false)}
         maxWidth="sm"
         fullWidth
       >
-        <DialogTitle sx={{ position: 'relative', paddingRight: '48px' }}>
+        <DialogTitle sx={{ position: 'relative', paddingRight: '48px', fontSize: '24px', mt: 2, mb: 2 }}>
           Upload Document
           <IconButton
             color="inherit"
             onClick={() => setShowUploadModal(false)}
             sx={{ position: 'absolute', right: 8, top: 8 }}
           >
-            <CloseIcon />
+            <Close />
           </IconButton>
         </DialogTitle>
         <DialogContent sx={{ minHeight: '300px', display: 'flex', flexDirection: 'column' }}>

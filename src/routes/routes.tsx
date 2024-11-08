@@ -5,7 +5,7 @@ import { createBrowserRouter } from 'react-router-dom';
 import NotFound from '../components/not-found/NotFound';
 import NavigationBar from '../components/navigation-bar/NavigationBar';
 import { Endpoint } from './endpoint';
-import MainPage from '../pages/main-page/MainPage';
+import Home from '../pages/home/Home.tsx';
 import Profile from '../pages/profile/Profile';
 import Statistics from '../pages/statistics/Statistics';
 import Career from '../pages/career/Career';
@@ -77,7 +77,7 @@ const routeOptions: RouteObject[] = [
     children: [
       {
         path: Endpoint.MAIN_PAGE,
-        element: <ProtectedRoute path={Endpoint.MAIN_PAGE} element={<MainPage />} />
+        element: <ProtectedRoute path={Endpoint.MAIN_PAGE} element={<Home />} />
       },
       {
         path: Endpoint.STATISTICS,

@@ -25,7 +25,7 @@ const validateToken = (token: string): boolean => {
 
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ element }) => {
   const navigate = useNavigate();
-  const token = localStorage.getItem('token');
+  const token = sessionStorage.getItem('token');
   const isAuthenticated = token ? validateToken(token) : false;
 
   useEffect(() => {

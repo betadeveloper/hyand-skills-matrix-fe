@@ -12,14 +12,15 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
-  TextField
 } from '@mui/material';
-import { get, post, put } from '../../api/api.ts';
+import { get, post } from '../../api/api.ts';
 import { ToastContainer, toast } from 'react-toastify';
 import Confetti from 'react-confetti';
 import { useWindowSize } from 'react-use';
 import { Link } from 'react-router-dom';
 import { Endpoint } from '../../routes/endpoint.tsx';
+
+import { Add } from '@mui/icons-material/';
 
 const Career = () => {
   enum CareerLevel {
@@ -217,15 +218,15 @@ const Career = () => {
 
       <Box display="flex" justifyContent="flex-end">
         {roles.includes('ROLE_ADMIN') || roles.includes('ROLE_OWNER') ? (
-          <Button component={Link} to={'/' + Endpoint.CAREER_PATHS} variant="contained" color="primary">
-            Add New Career Paths
+          <Button component={Link} to={'/' + Endpoint.CAREER_PATHS} variant="contained" color="primary" sx={{mr: 2}}>
+            <Add sx={{mr: 1}}/>Add New Career Paths
           </Button>
         ) : null}
       </Box>
 
       {careerPaths[0] && (
         <Box display="flex" flexDirection="column" alignItems="center" mt={3}>
-          <Typography variant="h6" mt={3}>
+          <Typography variant="h4" mt={3} mb={2}>
             Skills for <b>{careerPaths[0].name}</b> Career Path
           </Typography>
           {skills.length > 0 ? (

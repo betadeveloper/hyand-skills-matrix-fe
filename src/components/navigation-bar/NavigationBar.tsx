@@ -1,20 +1,12 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import * as React from 'react';
-import AppBar from '@mui/material/AppBar';
-import Box from '@mui/material/Box';
-import Toolbar from '@mui/material/Toolbar';
-import Typography from '@mui/material/Typography';
-import IconButton from '@mui/material/IconButton';
-import AccountCircle from '@mui/icons-material/AccountCircle';
-import MenuItem from '@mui/material/MenuItem';
-import Menu from '@mui/material/Menu';
-import Drawer from '@mui/material/Drawer';
+
+import { Drawer, Menu, MenuItem, IconButton, Typography, Toolbar, Box, AppBar } from '@mui/material';
+import { Assistant, AccountCircle  } from '@mui/icons-material';
 
 import { Endpoint } from '../../routes/endpoint';
 import { Link } from 'react-router-dom';
 import { InsertComment, AssignmentInd, Home, Analytics, AutoStories } from '@mui/icons-material/';
 import HyandLogo from '../../assets/images/hyand-logo.gif';
-import TypeSearch from '../search/Search';
 
 import { get } from '../../api/api.ts';
 
@@ -47,7 +39,7 @@ export default function NavigationBar() {
     { to: Endpoint.CAREER, icon: <AssignmentInd sx={{ color: 'black' }} />, text: 'Career' },
     { to: Endpoint.FEEDBACK, icon: <InsertComment sx={{ color: 'black' }} />, text: 'Feedback' },
     { to: Endpoint.WIKI, icon: <AutoStories sx={{ color: 'black' }} />, text: 'Wiki' },
-    { to: Endpoint.REVIEW_PORTAL, icon: <AutoStories sx={{ color: 'black' }} />, text: 'Review Portal' },
+    { to: Endpoint.REVIEW_PORTAL, icon: <Assistant sx={{ color: 'black' }} />, text: 'Review Portal' },
   ];
 
   const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
@@ -59,7 +51,7 @@ export default function NavigationBar() {
   };
 
   const handleLogOut = () => {
-    localStorage.removeItem('token');
+    sessionStorage.removeItem('token');
     window.location.href = '/register';
   };
 

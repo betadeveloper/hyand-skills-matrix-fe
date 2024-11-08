@@ -5,7 +5,7 @@ const axiosInstance = axios.create({
 });
 
 axiosInstance.interceptors.request.use((config: InternalAxiosRequestConfig) => {
-  const token = localStorage.getItem('token');
+  const token = sessionStorage.getItem('token');
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }
@@ -18,7 +18,7 @@ const request = async <T>(
   data?: unknown,
   config?: AxiosRequestConfig,
 ): Promise<T> => {
-  const token = await localStorage.getItem('token');
+  const token = await sessionStorage.getItem('token');
   if (token) {
     config = { headers: { Authorization: `Bearer ${token}` } };
   }

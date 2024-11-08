@@ -4,7 +4,7 @@ import GoalsCard from '../../components/goals-card/GoalsCard.tsx';
 import ProgressCard from '../../components/progress-card/ProgressCard.tsx';
 import OwnersCard from '../../components/owners-card/OwnersCard.tsx';
 
-const MainPage = () => {
+const Home = () => {
   return (
     <>
       <Box
@@ -40,4 +40,4 @@ const MainPage = () => {
   );
 };
 
-export default MainPage;
+export default Home;

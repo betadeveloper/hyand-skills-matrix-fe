@@ -1,4 +1,4 @@
-import { Box } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import { useEffect } from 'react';
 import { RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar, Tooltip, Legend } from 'recharts';
 import TrackChangesIcon from '@mui/icons-material/TrackChanges';
@@ -23,9 +23,9 @@ const Statistics = () => {
 
   return (
     <Box display={'flex'} justifyContent={'center'} alignItems={'center'} flexDirection={'column'}>
-      <Box display={'flex'} flexDirection={'row'} alignItems={'center'}>
+      <Box display={'flex'} flexDirection={'row'} alignItems={'center'} mt={4}>
         <TrackChangesIcon color="primary" style={{ fontSize: 50, marginRight: 10 }} />
-        <h1>Statistics</h1>
+        <Typography variant="h1" fontWeight={600}>Statistics</Typography>
       </Box>
       <RadarChart cx={300} cy={250} outerRadius={150} width={600} height={500} data={data}>
         <PolarGrid />

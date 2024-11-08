@@ -33,7 +33,7 @@ Total : 36 files,  5514 codes, 5 comments, 145 blanks, all 5664 lines
 | [src/pages/feedback/Feedback.tsx](/src/pages/feedback/Feedback.tsx) | TypeScript JSX | 4 | 0 | 2 | 6 |
 | [src/pages/goals/Goals.tsx](/src/pages/goals/Goals.tsx) | TypeScript JSX | 4 | 0 | 2 | 6 |
 | [src/pages/login/LogIn.tsx](/src/pages/login/LogIn.tsx) | TypeScript JSX | 131 | 0 | 7 | 138 |
-| [src/pages/main-page/MainPage.tsx](/src/pages/main-page/MainPage.tsx) | TypeScript JSX | 42 | 0 | 5 | 47 |
+| [src/pages/main-page/Home.tsx](/src/pages/home/Home.tsx) | TypeScript JSX | 42 | 0 | 5 | 47 |
 | [src/pages/profile/Profile.tsx](/src/pages/profile/Profile.tsx) | TypeScript JSX | 151 | 1 | 12 | 164 |
 | [src/pages/register/Register.tsx](/src/pages/register/Register.tsx) | TypeScript JSX | 195 | 0 | 7 | 202 |
 | [src/pages/statistics/Statistics.tsx](/src/pages/statistics/Statistics.tsx) | TypeScript JSX | 23 | 0 | 4 | 27 |

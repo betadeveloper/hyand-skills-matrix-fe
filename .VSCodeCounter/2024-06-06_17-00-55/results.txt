@@ -74,7 +74,7 @@ Files
 | c:\Users\rtautkus\Desktop\projects\skills-matrix-application-fe\src\pages\feedback\Feedback.tsx                     | TypeScript JSX     |          4 |          0 |          2 |          6 |
 | c:\Users\rtautkus\Desktop\projects\skills-matrix-application-fe\src\pages\goals\Goals.tsx                           | TypeScript JSX     |          4 |          0 |          2 |          6 |
 | c:\Users\rtautkus\Desktop\projects\skills-matrix-application-fe\src\pages\login\LogIn.tsx                           | TypeScript JSX     |        131 |          0 |          7 |        138 |
-| c:\Users\rtautkus\Desktop\projects\skills-matrix-application-fe\src\pages\main-page\MainPage.tsx                    | TypeScript JSX     |         42 |          0 |          5 |         47 |
+| c:\Users\rtautkus\Desktop\projects\skills-matrix-application-fe\src\pages\main-page\Home.tsx                    | TypeScript JSX     |         42 |          0 |          5 |         47 |
 | c:\Users\rtautkus\Desktop\projects\skills-matrix-application-fe\src\pages\profile\Profile.tsx                       | TypeScript JSX     |        151 |          1 |         12 |        164 |
 | c:\Users\rtautkus\Desktop\projects\skills-matrix-application-fe\src\pages\register\Register.tsx                     | TypeScript JSX     |        195 |          0 |          7 |        202 |
 | c:\Users\rtautkus\Desktop\projects\skills-matrix-application-fe\src\pages\statistics\Statistics.tsx                 | TypeScript JSX     |         23 |          0 |          4 |         27 |

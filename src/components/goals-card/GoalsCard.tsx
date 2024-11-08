@@ -1,5 +1,5 @@
 import { Box, Button, Typography, Dialog, DialogTitle, DialogContent, TextField, DialogActions, DialogContentText } from '@mui/material';
-import { DonutSmall } from '@mui/icons-material/';
+import { DonutSmall, Add } from '@mui/icons-material/';
 import { useEffect, useState } from 'react';
 import { get, post, remove } from '../../api/api.ts';
 import { toast } from 'react-toastify';
@@ -88,7 +88,7 @@ const GoalsCard = () => {
         minHeight: 200,
         display: 'flex',
         flexDirection: 'column',
-        justifyContent: 'space-between', // Ensures space is utilized
+        justifyContent: 'space-between',
       }}
       variant="outlined"
     >
@@ -98,7 +98,9 @@ const GoalsCard = () => {
           <Typography variant="h5" fontWeight={'Bold'} ml={1}>Goals</Typography>
         </Link>
         <Box sx={{ width: '32px' }} />
-        <Button onClick={() => setOpen(true)}>Add Goal</Button>
+        <Button onClick={() => setOpen(true)}>
+         Add Goal <Add sx={{ml: 1}} />
+        </Button>
       </Box>
       <Box flexGrow={1}>
         {goals.map((goal) => (

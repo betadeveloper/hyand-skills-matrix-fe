@@ -33,7 +33,7 @@ export default function Login() {
     post('/auth/login', data)
       .then((response) => {
         const loginResponse = response as LoginResponse;
-        localStorage.setItem('token', loginResponse.token);
+        sessionStorage.setItem('token', loginResponse.token);
         navigate('/');
       })
       .catch((error) => {
@@ -46,8 +46,8 @@ export default function Login() {
   };
 
   React.useEffect(() => {
-    localStorage.removeItem('token');
-  }, []);
+    sessionStorage.removeItem('token');
+  }, [])
 
   return (
     <ThemeProvider theme={theme}>

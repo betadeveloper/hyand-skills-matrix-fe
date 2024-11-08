@@ -50,7 +50,7 @@ const NotFound = ({ marginTop }: { marginTop?: string }) => {
         >
           <img src={image} alt="error" />
         </Box>
-        <Typography variant="h3">Error: 404 Page Not Found</Typography>
+        <Typography variant="h3" fontWeight={600}>Error: 404 Page Not Found</Typography>
         <Button
           onClick={handleClick}
           sx={{

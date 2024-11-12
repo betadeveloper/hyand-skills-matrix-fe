@@ -86,7 +86,7 @@ const Career = () => {
       setCareerLevel(response.careerLevel);
       setRoles(response.roles);
     });
-    get('http://localhost:8080/api/careerPaths').then((response: any) => {
+    get('http://localhost:8080/api/careerPaths/all').then((response: any) => {
       setCareerPaths(response);
       setLoading(false);
     });

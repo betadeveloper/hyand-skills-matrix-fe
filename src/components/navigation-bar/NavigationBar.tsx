@@ -130,7 +130,7 @@ export default function NavigationBar() {
         >
           <img src={HyandLogo} alt="Hyand Logo" />
           <Typography variant="h4" fontWeight={'bold'} color="primary" textAlign={'center'}>
-            Skills Matrix
+            Skills Matrix Framework
           </Typography>
         </Box>
         <Box

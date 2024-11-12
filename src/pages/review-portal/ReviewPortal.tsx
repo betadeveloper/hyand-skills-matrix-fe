@@ -3,11 +3,15 @@ import { get, put } from '../../api/api';
 import { Button, Dialog, DialogTitle, DialogContent, DialogActions, IconButton, Typography, Card, CardContent, Container } from '@mui/material';
 import { Assistant, Close } from '@mui/icons-material';
 import { Box } from '@mui/system';
+import { useNavigate } from 'react-router-dom';
+
 
 const ReviewPortal = () => {
   const [reviews, setReviews] = useState([]);
   const [open, setOpen] = useState(false);
   const [selectedReview, setSelectedReview] = useState(null);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchReviews();
@@ -57,6 +61,16 @@ const ReviewPortal = () => {
         <Assistant color="primary" sx={{ fontSize: 50, marginRight: 2 }} />
         <Typography variant="h1" sx={{ fontWeight: '600' }}>Review Portal</Typography>
       </Box>
+      <Box sx={{ display: 'flex', justifyContent: 'center', mb: 4 }}>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={() => navigate('/finished-reviews')}
+        >
+          Go to Finished Reviews
+        </Button>
+      </Box>
+
       {reviews.map((review) => (
         <Card
           key={review.id}

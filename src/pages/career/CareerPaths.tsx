@@ -21,10 +21,7 @@ import {
   DialogContentText,
   DialogTitle
 } from '@mui/material';
-import AddIcon from '@mui/icons-material/Add';
-import CloseIcon from '@mui/icons-material/Close';
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import DeleteIcon from '@mui/icons-material/Delete';
+import { Add, Close, ArrowBack, Delete } from '@mui/icons-material';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -42,6 +39,7 @@ const CareerPaths = () => {
   const [showInputs, setShowInputs] = useState(false);
   const [assignEmployeeModalOpen, setAssignEmployeeModalOpen] = useState(false);
   const [viewEmployeesAndSkillsModalOpen, setViewEmployeesAndSkillsModalOpen] = useState(false);
+  const [isCreateSkillVisible, setIsCreateSkillVisible] = useState(false);
   const [deleteConfirmationOpen, setDeleteConfirmationOpen] = useState(false);
   const [careerPathToDelete, setCareerPathToDelete] = useState<number | null>(null);
   const [selectedCareerPathId, setSelectedCareerPathId] = useState<number | null>(null);
@@ -123,14 +121,23 @@ const CareerPaths = () => {
     setShowInputs(false);
   };
 
-  const handleOpenAssignEmployeeModal = (id: number) => {
+  const handleOpenAssignEmployeeModal = (id) => {
     setSelectedCareerPathId(id);
-    setAssignEmployeeModalOpen(true);
+
+    get(`http://localhost:8080/api/careerPaths/${id}/employees`).then((response) => {
+      setAssignedEmployees(response);
+      setSelectedEmployees(response.map((employee) => employee.id));
+      setAssignEmployeeModalOpen(true);
+    });
   };
 
   const handleCloseAssignEmployeeModal = () => {
     setAssignEmployeeModalOpen(false);
     setSelectedEmployees([]);
+  };
+
+  const handleAddSkillClick = () => {
+    setIsCreateSkillVisible(true);
   };
 
   const handleOpenViewEmployeesAndSkillsModal = (id: number) => {
@@ -143,6 +150,7 @@ const CareerPaths = () => {
 
   const handleCloseViewEmployeesAndSkillsModal = () => {
     setViewEmployeesAndSkillsModalOpen(false);
+    setIsCreateSkillVisible(false);
     setSelectedEmployees([]);
     setSkills([]);
   };
@@ -156,9 +164,18 @@ const CareerPaths = () => {
   };
 
   const handleAssignEmployees = () => {
-    console.log('Assigned Employees:', selectedEmployees);
-    handleCloseAssignEmployeeModal();
-    toast.success('Employees assigned successfully!');
+    if (!selectedCareerPathId) return;
+
+    put(`http://localhost:8080/api/careerPaths/${selectedCareerPathId}/assignEmployees`, selectedEmployees)
+      .then((response) => {
+        setAssignedEmployees(response.employees);
+        toast.success('Employees assigned successfully!');
+        handleCloseAssignEmployeeModal();
+      })
+      .catch((error) => {
+        console.error("Error assigning employees:", error);
+        toast.error("Failed to assign employees. Please try again.");
+      });
   };
 
   const handleCreateSkill = () => {
@@ -194,7 +211,7 @@ const CareerPaths = () => {
     <Box maxWidth={800} margin="40px auto" padding={2}>
       <ToastContainer />
       <Box display="flex" justifyContent="flex-start" mb={2}>
-        <Button startIcon={<ArrowBackIcon />} variant="outlined" onClick={handleGoBack}>
+        <Button startIcon={<ArrowBack />} variant="outlined" onClick={handleGoBack}>
           Go Back
         </Button>
       </Box>
@@ -223,7 +240,7 @@ const CareerPaths = () => {
                 Assign Employees
               </Button>
               <IconButton onClick={() => handleConfirmDeleteCareerPath(careerPath.id)}>
-                <DeleteIcon />
+                <Delete/>
               </IconButton>
             </ListItem>
           </Paper>
@@ -261,13 +278,12 @@ const CareerPaths = () => {
       ) : (
         <Box display="flex" justifyContent="center" marginTop={4}>
           <Fab variant="extended" color="primary" aria-label="add" onClick={handleShowInputs}>
-            <AddIcon sx={{ mr: 1 }} />
+            <Add sx={{ mr: 1 }} />
             Create Career Path
           </Fab>
         </Box>
       )}
 
-      {/* Modal for Assigning Employees */}
       <Modal open={assignEmployeeModalOpen} onClose={handleCloseAssignEmployeeModal}>
         <Box style={{ top: '50%', left: '50%', transform: 'translate(-50%, -50%)', position: 'absolute', width: 400, backgroundColor: 'white', padding: '16px', borderRadius: '8px' }}>
           <Typography variant="h6" gutterBottom>
@@ -282,7 +298,7 @@ const CareerPaths = () => {
                 <ListItemText primary={`${employee.firstName} ${employee.lastName}`} />
               </ListItem>
             ))}
-          </List>
+        </List>
           <Box display="flex" justifyContent="space-between" marginTop={2}>
             <Button variant="outlined" color="primary" onClick={handleCloseAssignEmployeeModal}>
               Cancel
@@ -294,9 +310,12 @@ const CareerPaths = () => {
         </Box>
       </Modal>
 
-      {/* Modal for Viewing Employees and Skills */}
       <Modal open={viewEmployeesAndSkillsModalOpen} onClose={handleCloseViewEmployeesAndSkillsModal}>
-        <Box style={{ top: '50%', left: '50%', transform: 'translate(-50%, -50%)', position: 'absolute', width: 600, backgroundColor: 'white', padding: '16px', borderRadius: '8px' }}>
+        <Box style={{
+          top: '50%', left: '50%', transform: 'translate(-50%, -50%)',
+          position: 'absolute', width: 600, backgroundColor: 'white',
+          padding: '16px', borderRadius: '8px', maxHeight: '80vh', overflowY: 'auto'
+        }}>
           <Typography variant="h6" gutterBottom>
             Assigned Employees and Skills
           </Typography>
@@ -310,6 +329,7 @@ const CareerPaths = () => {
               </ListItem>
             ))}
           </List>
+
           <Typography variant="subtitle1" gutterBottom>
             Skills:
           </Typography>
@@ -326,57 +346,64 @@ const CareerPaths = () => {
                     </Typography>
                   </Box>
                   <IconButton onClick={() => handleDeleteSkill(skill.id)}>
-                    <DeleteIcon />
+                    <Delete />
                   </IconButton>
                 </ListItem>
               </Paper>
             ))}
           </List>
 
-          <Box marginTop={4}>
-            <Typography variant="h6">Create New Skill</Typography>
-            <TextField
-              label="Skill Name"
-              value={newSkill.name}
-              onChange={(e) => setNewSkill({ ...newSkill, name: e.target.value })}
-              fullWidth
-              margin="normal"
-            />
-            <TextField
-              label="Skill Description"
-              value={newSkill.description}
-              onChange={(e) => setNewSkill({ ...newSkill, description: e.target.value })}
-              fullWidth
-              margin="normal"
-              multiline
-              rows={2}
-            />
-            <TextField
-              label="Proficiency"
-              value={newSkill.proficiency}
-              onChange={(e) => setNewSkill({ ...newSkill, proficiency: Number(e.target.value) })}
-              fullWidth
-              margin="normal"
-              type="number"
-            />
-            <TextField
-              label="Weight"
-              value={newSkill.weight}
-              onChange={(e) => setNewSkill({ ...newSkill, weight: Number(e.target.value) })}
-              fullWidth
-              margin="normal"
-              type="number"
-            />
-            <Box display="flex" justifyContent="space-between" marginTop={2}>
-              <Button variant="contained" color="primary" onClick={handleCreateSkill}>
-                Add Skill
-              </Button>
-            </Box>
+          <Box display="flex" justifyContent="center" marginTop={2}>
+            <Button variant="contained" color="primary" onClick={handleAddSkillClick}>
+              <Add /> Create Skill
+            </Button>
           </Box>
+
+          {isCreateSkillVisible && (
+            <Box marginTop={4}>
+              <Typography variant="h6">Create New Skill</Typography>
+              <TextField
+                label="Skill Name"
+                value={newSkill.name}
+                onChange={(e) => setNewSkill({ ...newSkill, name: e.target.value })}
+                fullWidth
+                margin="normal"
+              />
+              <TextField
+                label="Skill Description"
+                value={newSkill.description}
+                onChange={(e) => setNewSkill({ ...newSkill, description: e.target.value })}
+                fullWidth
+                margin="normal"
+                multiline
+                rows={2}
+              />
+              <TextField
+                label="Proficiency"
+                value={newSkill.proficiency}
+                onChange={(e) => setNewSkill({ ...newSkill, proficiency: Number(e.target.value) })}
+                fullWidth
+                margin="normal"
+                type="number"
+              />
+              <TextField
+                label="Weight"
+                value={newSkill.weight}
+                onChange={(e) => setNewSkill({ ...newSkill, weight: Number(e.target.value) })}
+                fullWidth
+                margin="normal"
+                type="number"
+              />
+              <Box display="flex" justifyContent="space-between" marginTop={2}>
+                <Button variant="contained" color="primary" onClick={handleCreateSkill}>
+                  Add Skill
+                </Button>
+              </Box>
+            </Box>
+          )}
         </Box>
       </Modal>
 
-      {/* Dialog for delete confirmation */}
       <Dialog open={deleteConfirmationOpen} onClose={() => setDeleteConfirmationOpen(false)}>
         <DialogTitle>Confirm Delete</DialogTitle>
         <DialogContent>

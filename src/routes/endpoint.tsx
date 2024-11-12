@@ -12,4 +12,5 @@ export enum Endpoint {
   PRIVACY_POLICY = 'privacy-policy',
   CAREER_PATHS = 'career-paths',
   REVIEW_PORTAL = 'review-portal',
+  FINISHED_REVIEWS = 'finished-reviews',
 }

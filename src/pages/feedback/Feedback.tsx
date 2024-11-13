@@ -12,10 +12,12 @@ const Feedback = () => {
   const [selectedEmployee, setSelectedEmployee] = useState('');
   const [feedbackText, setFeedbackText] = useState('');
   const [roles, setRoles] = useState<any[]>([]);
+  const [ownerId, setOwnerId] = useState();
 
   useEffect(() => {
     get('http://localhost:8080/api/employee/current').then((response) => {
       setRoles(response.roles || []);
+      setOwnerId(response.id);
     });
   }, []);
 
@@ -31,12 +33,13 @@ const Feedback = () => {
         setError('Failed to load feedback');
       });
 
-    get('http://localhost:8080/api/employee/managedBy/ownerId')
+    get('http://localhost:8080/api/owners/currentOwner/employees')
       .then((response: any) => {
         setEmployees(response);
       })
       .catch((err) => {
         console.error('Error fetching employees:', err);
+        setError('Failed to load employees');
       });
   }, []);
 
@@ -49,7 +52,7 @@ const Feedback = () => {
     const feedbackData = {
       feedbackText,
       employeeId: selectedEmployee,
-      ownerId: 'ownerId',
+      ownerId: ownerId,
     };
 
     post('http://localhost:8080/api/feedback', feedbackData)

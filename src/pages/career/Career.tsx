@@ -76,6 +76,24 @@ const Career = () => {
 
   const careerLevels = Object.values(CareerLevel);
 
+  const handleSubmitReviewRequest = () => {
+    const reviewRequest = {
+      score: score,
+      careerLevel: careerLevel,
+      evaluatedCareerLevel: evaluatedCareerLevel
+    };
+
+    post('http://localhost:8080/api/reviews/createReviewRequest', reviewRequest)
+      .then(() => {
+        toast.success('Review request created successfully!');
+        handleClose();
+      })
+      .catch((error) => {
+        toast.error('Failed to create review request: ' + error.message);
+        handleClose();
+      });
+  };
+
   useEffect(() => {
     get('http://localhost:8080/api/employee/current').then((response: any) => {
       setFirstName(response.firstName);
@@ -118,16 +136,6 @@ const Career = () => {
     setOpen(false);
   };
 
-  const handleSubmitReviewRequest = () => {
-    post('http://localhost:8080/api/review/createReviewRequest')
-      .then(() => {
-        toast.success('Review request created successfully!');
-        handleCloseReviewDialog(); // Close the dialog on success
-      })
-      .catch((error) => {
-        toast.error('Failed to create review request: ' + error.message);
-      });
-  };
 
 
   const calculateCareerLevel = () => {
@@ -281,7 +289,7 @@ const Career = () => {
       )}
 
       <Dialog open={open} onClose={handleClose} fullWidth>
-        <DialogTitle fontSize={32}>Book Review From Owner</DialogTitle>
+        <DialogTitle fontSize={24} mb={2}>Book Review From Owner</DialogTitle>
         <DialogContent>
           <Typography mb={2} fontSize={18}>
             Owner: <b>{owners.length > 0 ? `${owners[0].firstName} ${owners[0].lastName}` : 'No owners available'}</b>
@@ -290,7 +298,7 @@ const Career = () => {
             Score: {score ? score.toPrecision(4) : 'N/A'}
           </Typography>
           <Typography fontSize={20}>
-            Career Level: {evaluatedCareerLevel ? evaluatedCareerLevel : 'N/A'}
+            Evaluated Career Level: {evaluatedCareerLevel && careerLevel ? `${careerLevel} --> ${evaluatedCareerLevel} `: 'N/A'}
           </Typography>
         </DialogContent>
         <DialogActions>

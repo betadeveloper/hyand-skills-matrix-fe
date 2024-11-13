@@ -103,6 +103,13 @@ const CareerPaths = () => {
     setDeleteConfirmationOpen(true);
   };
 
+  const getCareerPathEmployees = (id: number) => {
+    get(`http://localhost:8080/api/careerPaths/${id}/employees`).then((response) => {
+      setAssignedEmployees(response);
+      setSelectedEmployees(response.map((employee) => employee.id));
+    });
+  }
+
   const handleDeleteCareerPath = () => {
     if (careerPathToDelete !== null) {
       remove(`http://localhost:8080/api/careerPaths/${careerPathToDelete}`).then(() => {
@@ -122,13 +129,9 @@ const CareerPaths = () => {
   };
 
   const handleOpenAssignEmployeeModal = (id) => {
+    getCareerPathEmployees(id);
     setSelectedCareerPathId(id);
-
-    get(`http://localhost:8080/api/careerPaths/${id}/employees`).then((response) => {
-      setAssignedEmployees(response);
-      setSelectedEmployees(response.map((employee) => employee.id));
-      setAssignEmployeeModalOpen(true);
-    });
+    setAssignEmployeeModalOpen(true);
   };
 
   const handleCloseAssignEmployeeModal = () => {
@@ -141,10 +144,14 @@ const CareerPaths = () => {
   };
 
   const handleOpenViewEmployeesAndSkillsModal = (id: number) => {
+    setAssignedEmployees([]);
+    setSkills([]);
     setSelectedCareerPathId(id);
     get(`http://localhost:8080/api/skills/${id}`).then((response: any) => {
       setSkills(response);
     });
+
+    getCareerPathEmployees(id);
     setViewEmployeesAndSkillsModalOpen(true);
   };
 
@@ -187,6 +194,11 @@ const CareerPaths = () => {
       });
     }
   };
+
+  const handleCancelCreateSkill = () => {
+    setIsCreateSkillVisible(false);
+  };
+
 
   const handleDeleteSkill = (id: number) => {
     remove(`http://localhost:8080/api/skills/${id}`).then(() => {
@@ -316,23 +328,35 @@ const CareerPaths = () => {
           position: 'absolute', width: 600, backgroundColor: 'white',
           padding: '16px', borderRadius: '8px', maxHeight: '80vh', overflowY: 'auto'
         }}>
-          <Typography variant="h6" gutterBottom>
+          <Typography variant="h3" gutterBottom>
             Assigned Employees and Skills
           </Typography>
-          <Typography variant="subtitle1" gutterBottom>
+          <Typography variant="subtitle1" gutterBottom fontSize={18} fontWeight={500}>
             Employees:
           </Typography>
-          <List>
-            {assignedEmployees.map((employee) => (
-              <ListItem key={employee.id}>
-                <ListItemText primary={`${employee.firstName} ${employee.lastName}`} />
-              </ListItem>
-            ))}
-          </List>
 
-          <Typography variant="subtitle1" gutterBottom>
+          {assignedEmployees.length === 0 ? (
+            <Typography variant="body1" color="textSecondary" align="center">
+              No employees assigned yet.
+            </Typography>
+          ) : (
+            <List>
+              {assignedEmployees.map((employee) => (
+                <ListItem key={employee.id} style={{ borderBottom: '1px solid #ddd' }}>
+                  <ListItemText primary={`${employee.firstName} ${employee.lastName}`} />
+                </ListItem>
+              ))}
+            </List>
+          )}
+
+          <Typography variant="subtitle1" gutterBottom style={{ marginTop: '16px', marginBottom: '16px'}} fontSize={18} fontWeight={500}>
             Skills:
           </Typography>
+          {skills.length === 0 ? (
+            <Typography variant="body1" color="textSecondary" align="center" style={{marginBottom: '48px'}}>
+              No Skills added yet.
+            </Typography>
+            ) : (
           <List>
             {skills.map((skill) => (
               <Paper key={skill.id} elevation={3} style={{ margin: '8px 0', padding: '8px' }}>
@@ -352,6 +376,7 @@ const CareerPaths = () => {
               </Paper>
             ))}
           </List>
+          )}
 
           <Box display="flex" justifyContent="center" marginTop={2}>
             <Button variant="contained" color="primary" onClick={handleAddSkillClick}>
@@ -395,8 +420,11 @@ const CareerPaths = () => {
                 type="number"
               />
               <Box display="flex" justifyContent="space-between" marginTop={2}>
-                <Button variant="contained" color="primary" onClick={handleCreateSkill}>
+                <Button variant="contained" onClick={handleCreateSkill}>
                   Add Skill
+                </Button>
+                <Button variant="outlined" onClick={handleCancelCreateSkill}>
+                  Cancel
                 </Button>
               </Box>
             </Box>

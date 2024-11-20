@@ -11,7 +11,7 @@ import {
   Dialog,
   DialogActions,
   DialogContent,
-  DialogTitle,
+  DialogTitle
 } from '@mui/material';
 import { get, post } from '../../api/api.ts';
 import { ToastContainer, toast } from 'react-toastify';
@@ -30,6 +30,14 @@ const Career = () => {
     LEAD = 'LEAD',
     PRINCIPAL = 'PRINCIPAL'
   }
+
+  const careerLevelOrder = [
+    CareerLevel.JUNIOR,
+    CareerLevel.MID,
+    CareerLevel.SENIOR,
+    CareerLevel.LEAD,
+    CareerLevel.PRINCIPAL
+  ];
 
   interface Skill {
     id: number;
@@ -54,11 +62,7 @@ const Career = () => {
   }
 
   const [careerPaths, setCareerPaths] = useState<CareerPath[]>([]);
-  const [firstName, setFirstName] = useState<string>('');
-  const [lastName, setLastName] = useState<string>('');
-  const [email, setEmail] = useState<string>('');
-  const [position, setPosition] = useState<string>('');
-  const [department, setDepartment] = useState<string>('');
+  const [careerPath, setCareerPath] = useState<CareerPath>();
   const [careerLevel, setCareerLevel] = useState<CareerLevel>();
   const [roles, setRoles] = useState<string[]>([]);
   const [evaluatedCareerLevel, setEvaluatedCareerLevel] = useState<CareerLevel>();
@@ -96,11 +100,6 @@ const Career = () => {
 
   useEffect(() => {
     get('http://localhost:8080/api/employee/current').then((response: any) => {
-      setFirstName(response.firstName);
-      setLastName(response.lastName);
-      setEmail(response.email);
-      setPosition(response.position);
-      setDepartment(response.department);
       setCareerLevel(response.careerLevel);
       setRoles(response.roles);
     });
@@ -115,11 +114,18 @@ const Career = () => {
     get('http://localhost:8080/api/skills/1').then((response: Skill[]) => {
       setSkills(response);
     });
+
+    get('http://localhost:8080/api/careerPaths/current').then().then((response: any) => {
+      setCareerPath(response);
+      console.log(response);
+    });
   }, []);
 
 
   const handleClickOpen = () => {
     setOpen(true);
+    console.log(careerLevel);
+    console.log(evaluatedCareerLevel);
   };
 
   const handleClose = () => {
@@ -137,7 +143,6 @@ const Career = () => {
   };
 
 
-
   const calculateCareerLevel = () => {
     if (careerPaths.length > 0) {
       const weights = skills.map((skill) => skill.weight);
@@ -147,20 +152,20 @@ const Career = () => {
       let newCareerLevel: CareerLevel;
 
       if (score <= 72) {
-        newCareerLevel = CareerLevel.JUNIOR;
+        newCareerLevel = careerLevelOrder[0];
       } else if (score <= 144) {
-        newCareerLevel = CareerLevel.MID;
+        newCareerLevel = careerLevelOrder[1];
       } else if (score <= 216) {
-        newCareerLevel = CareerLevel.SENIOR;
+        newCareerLevel = careerLevelOrder[2];
       } else if (score <= 288) {
-        newCareerLevel = CareerLevel.LEAD;
+        newCareerLevel = careerLevelOrder[3];
       } else {
-        newCareerLevel = CareerLevel.PRINCIPAL;
+        newCareerLevel = careerLevelOrder[4];
       }
 
       setEvaluatedCareerLevel(newCareerLevel);
 
-      if (newCareerLevel !== careerLevel) {
+      if (careerLevelOrder.indexOf(newCareerLevel) > careerLevelOrder.indexOf(careerLevel as CareerLevel)) {
         setShowConfetti(true);
         setTimeout(() => setShowConfetti(false), 3000);
       }
@@ -223,19 +228,19 @@ const Career = () => {
           </Box>
         ))}
       </Box>
-
-      <Box display="flex" justifyContent="flex-end">
-        {roles.includes('ROLE_ADMIN') || roles.includes('ROLE_OWNER') ? (
-          <Button component={Link} to={'/' + Endpoint.CAREER_PATHS} variant="contained" color="primary" sx={{mr: 2}}>
-            <Add sx={{mr: 1}}/>Add New Career Paths
-          </Button>
-        ) : null}
+      <Box position="relative" display="flex" justifyContent="flex-start">
+        <Box position="absolute" right={24} top={55}>
+          {roles.includes('ROLE_ADMIN') || roles.includes('ROLE_OWNER') ? (
+            <Button component={Link} to={'/' + Endpoint.CAREER_PATHS} variant="contained" color="primary">
+              <Add sx={{ mr: 1 }} />Add New Career Paths
+            </Button>
+          ) : null}
+        </Box>
       </Box>
-
-      {careerPaths[0] && (
+      {careerPath && (
         <Box display="flex" flexDirection="column" alignItems="center" mt={3}>
           <Typography variant="h4" mt={3} mb={2}>
-            Skills for <b>{careerPaths[0].name}</b> Career Path
+            Skills for <b>{careerPath.name}</b> Career Path
           </Typography>
           {skills.length > 0 ? (
             skills.map((skill, index) => (
@@ -267,7 +272,7 @@ const Career = () => {
           )}
 
           {skills.length > 0 && (
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '400px'}}>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '400px' }}>
               <Button
                 onClick={calculateCareerLevel}
                 sx={{
@@ -280,9 +285,11 @@ const Career = () => {
                 }}>
                 Evaluate 🎉
               </Button>
-              <Button variant="outlined" color="primary" onClick={handleClickOpen}>
-                Book Review
-              </Button>
+              {(careerLevel && careerLevelOrder.indexOf(evaluatedCareerLevel) > careerLevelOrder.indexOf(careerLevel)) && (
+                <Button variant="outlined" color="primary" onClick={handleClickOpen}>
+                  Book Review
+                </Button>
+              )}
             </Box>
           )}
         </Box>
@@ -298,7 +305,8 @@ const Career = () => {
             Score: {score ? score.toPrecision(4) : 'N/A'}
           </Typography>
           <Typography fontSize={20}>
-            Evaluated Career Level: {evaluatedCareerLevel && careerLevel ? `${careerLevel} --> ${evaluatedCareerLevel} `: 'N/A'}
+            Evaluated Career
+            Level: {evaluatedCareerLevel && careerLevel ? `${careerLevel} --> ${evaluatedCareerLevel} ` : 'N/A'}
           </Typography>
         </DialogContent>
         <DialogActions>

@@ -1,16 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Button, Dialog, DialogTitle, DialogContent, DialogActions, TextField, Select, MenuItem, InputLabel, FormControl, IconButton, Typography } from '@mui/material';
-import { InsertComment, Close } from '@mui/icons-material';
-import { get, post } from '../../api/api';
-import { toast } from 'react-toastify';
+import { Box, Button, Typography } from '@mui/material';
+import { InsertComment } from '@mui/icons-material';
+import { get } from '../../api/api';
+import AddFeedbackDialog from '../../components/add-feedback-dialog/AddFeedbackDialog.tsx';
 
 const Feedback = () => {
   const [feedback, setFeedback] = useState<any[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [openDialog, setOpenDialog] = useState(false);
   const [employees, setEmployees] = useState<any[]>([]);
-  const [selectedEmployee, setSelectedEmployee] = useState('');
-  const [feedbackText, setFeedbackText] = useState('');
   const [roles, setRoles] = useState<any[]>([]);
   const [ownerId, setOwnerId] = useState();
 
@@ -43,33 +41,10 @@ const Feedback = () => {
       });
   }, []);
 
-  const handleSubmitFeedback = () => {
-    if (!selectedEmployee || !feedbackText) {
-      toast.error('Please select an employee and provide feedback');
-      return;
-    }
-
-    const feedbackData = {
-      feedbackText,
-      employeeId: selectedEmployee,
-      ownerId: ownerId,
-    };
-
-    post('http://localhost:8080/api/feedback', feedbackData)
-      .then(() => {
-        toast.success('Feedback submitted successfully');
-        setOpenDialog(false);
-        setFeedbackText('');
-        setSelectedEmployee('');
-        return get('http://localhost:8080/api/feedback/currentEmployee');
-      })
-      .then((response) => {
-        setFeedback(response);
-      })
-      .catch((err) => {
-        console.error('Error submitting feedback:', err);
-        toast.error('Error submitting feedback');
-      });
+  const refreshFeedback = () => {
+    get('http://localhost:8080/api/feedback/currentEmployee')
+      .then((response) => setFeedback(response))
+      .catch((err) => console.error('Error refreshing feedback:', err));
   };
 
   const formatDate = (dateString: string) => {
@@ -77,15 +52,16 @@ const Feedback = () => {
     return new Intl.DateTimeFormat('en-US', {
       year: 'numeric',
       month: 'long',
-      day: 'numeric',
+      day: '2-digit',
       hour: '2-digit',
-      minute: '2-digit'
+      minute: '2-digit',
+      hour12: true,
     }).format(date);
   };
 
   return (
-    <Box display={'flex'} flexDirection={'column'} alignItems={'center'} ml={5}>
-      <Box display={'flex'} flexDirection={'row'} alignItems={'center'} mb={3} mt={3}>
+    <Box display="flex" flexDirection="column" alignItems="center" ml={5}>
+      <Box display="flex" flexDirection="row" alignItems="center" mb={3} mt={3}>
         <InsertComment color="primary" style={{ fontSize: 50, marginRight: 10 }} />
         <Typography variant="h1" fontWeight={600}>
           Feedback
@@ -94,7 +70,7 @@ const Feedback = () => {
       {error ? (
         <Typography color="error">{error}</Typography>
       ) : feedback.length > 0 ? (
-        <Box display={'flex'} flexDirection={'column'} mt={3} width="80%">
+        <Box display="flex" flexDirection="column" mt={3} width="80%">
           {feedback.map((item, index) => (
             <Box
               key={index}
@@ -103,9 +79,9 @@ const Feedback = () => {
               sx={{
                 backgroundColor: '#f9f9f9',
                 borderRadius: 4,
-                transition: '0.3s',
                 boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
-              }}>
+              }}
+            >
               <Typography variant="body1" gutterBottom>
                 <strong>"{item.feedbackText}"</strong>
               </Typography>
@@ -126,52 +102,13 @@ const Feedback = () => {
         </Button>
       )}
 
-      <Dialog open={openDialog} onClose={() => setOpenDialog(false)} maxWidth="sm" fullWidth>
-        <DialogTitle fontSize={24}  mt={2} mb={2}>
-          Add Feedback
-          <IconButton
-            color="inherit"
-            onClick={() => setOpenDialog(false)}
-            sx={{ position: 'absolute', right: 8, top: 8}}>
-            <Close />
-          </IconButton>
-        </DialogTitle>
-        <DialogContent>
-
-          <FormControl fullWidth sx={{ mb: 2 }}>
-            <InputLabel>Employee</InputLabel>
-            <Select
-              value={selectedEmployee}
-              onChange={(e) => setSelectedEmployee(e.target.value)}
-              label="Employee"
-            >
-              {employees.map((employee) => (
-                <MenuItem key={employee.id} value={employee.id}>
-                  {employee.firstName} {employee.lastName}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-
-          <TextField
-            label="Feedback"
-            multiline
-            fullWidth
-            rows={4}
-            value={feedbackText}
-            onChange={(e) => setFeedbackText(e.target.value)}
-            sx={{ mb: 2 }}
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setOpenDialog(false)} color="secondary">
-            Cancel
-          </Button>
-          <Button onClick={handleSubmitFeedback} color="primary">
-            Submit
-          </Button>
-        </DialogActions>
-      </Dialog>
+      <AddFeedbackDialog
+        open={openDialog}
+        onClose={() => setOpenDialog(false)}
+        employees={employees}
+        ownerId={ownerId}
+        onFeedbackSubmitted={refreshFeedback}
+      />
     </Box>
   );
 };

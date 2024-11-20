@@ -1,12 +1,17 @@
 import { useState, useEffect } from 'react';
 import { Card, CardContent, Typography, Container, Box, Button } from '@mui/material';
-import { get } from '../../../api/api.ts';
+import { get, remove } from '../../../api/api.ts';
 import { useNavigate } from 'react-router-dom';
-import { ArrowBack } from '@mui/icons-material'; // Import the ArrowBack icon
+import { ArrowBack } from '@mui/icons-material';
+import { toast } from 'react-toastify';
+
+import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
 
 const FinishedReviews = () => {
   const [finishedReviews, setFinishedReviews] = useState([]);
-  const navigate = useNavigate();
+  const navigate = useNavigate()
+  const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
+  const [reviewIdToDelete, setReviewIdToDelete] = useState<number>();
 
   useEffect(() => {
     fetchFinishedReviews();
@@ -23,12 +28,50 @@ const FinishedReviews = () => {
     }
   };
 
+  const handleDeleteReview = (reviewId: number) => {
+    setReviewIdToDelete(reviewId);
+    setOpenDeleteDialog(true);
+  };
+
+  const handleConfirmDelete = () => {
+    deleteReview(reviewIdToDelete);
+    setOpenDeleteDialog(false);
+  };
+
+
+  const deleteReview = async (reviewId: number) => {
+    try {
+      await remove(`http://localhost:8080/api/reviews/${reviewId}`);
+      fetchFinishedReviews();
+      toast.success('Review deleted successfully!');
+    } catch (error) {
+      toast.error('Failed to delete review: ' + error.message);
+    }
+  };
+
+
+  const handleCancelDelete = () => {
+    setOpenDeleteDialog(false);
+  };
+
   const handleBack = () => {
     navigate('/review-portal');
   };
 
   return (
     <Container maxWidth="lg" sx={{ mt: 4, mb: 2 }}>
+      <Dialog open={openDeleteDialog} onClose={handleCancelDelete}>
+        <DialogTitle>Delete Review</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Are you sure you want to delete this review?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCancelDelete}>Cancel</Button>
+          <Button onClick={handleConfirmDelete}>Delete</Button>
+        </DialogActions>
+      </Dialog>
       <Typography variant="h2" sx={{ fontWeight: '600', mb: 4 }}>Finished Reviews</Typography>
 
       {finishedReviews.length === 0 ? (
@@ -53,6 +96,10 @@ const FinishedReviews = () => {
               <Typography variant="body2" sx={{ marginTop: 1, color: 'text.secondary' }}>
                 {review.reviewReport}
               </Typography>
+
+              <Button variant="outlined" color="error" onClick={() => handleDeleteReview(review.id)}>
+                Delete Review
+              </Button>
             </CardContent>
           </Card>
         ))

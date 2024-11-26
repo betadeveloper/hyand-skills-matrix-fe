@@ -166,7 +166,7 @@ const ReviewPortal = () => {
             </Typography>
             {review.score && (
               <Typography sx={{ marginTop: 1 }}>
-                Score: {review.score}
+                Score: {review.score.toFixed(2).replace(/\.00$/, '')}
               </Typography>
             )}
           </CardContent>

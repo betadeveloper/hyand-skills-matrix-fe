@@ -11,7 +11,7 @@ import {
   Dialog,
   DialogActions,
   DialogContent,
-  DialogTitle
+  DialogTitle,
 } from '@mui/material';
 import { get, post } from '../../api/api.ts';
 import { ToastContainer, toast } from 'react-toastify';
@@ -21,6 +21,7 @@ import { Link } from 'react-router-dom';
 import { Endpoint } from '../../routes/endpoint.tsx';
 
 import { Add } from '@mui/icons-material/';
+
 
 const Career = () => {
   enum CareerLevel {
@@ -257,14 +258,24 @@ const Career = () => {
                     newProficiencies[index] = Number(event.target.value);
                     setSelectedProficiencies(newProficiencies);
                   }}>
-                  <MenuItem value={0} disabled>
+                  <MenuItem value={0} disabled title="Select a proficiency level">
                     Select proficiency
                   </MenuItem>
-                  <MenuItem value={1}>Beginner</MenuItem>
-                  <MenuItem value={2}>Medium</MenuItem>
-                  <MenuItem value={3}>Advanced</MenuItem>
-                  <MenuItem value={4}>Master</MenuItem>
-                  <MenuItem value={5}>Expert</MenuItem>
+                  <MenuItem value={1} title="Basic understanding of the skill">
+                    Beginner
+                  </MenuItem>
+                  <MenuItem value={2} title="Some experience with the skill, but still learning">
+                    Medium
+                  </MenuItem>
+                  <MenuItem value={3} title="Proficient in the skill, with some experience">
+                    Advanced
+                  </MenuItem>
+                  <MenuItem value={4} title="Highly skilled, with extensive experience">
+                    Master
+                  </MenuItem>
+                  <MenuItem value={5} title="Expert-level skills, with deep understanding">
+                    Expert
+                  </MenuItem>
                 </Select>
               </Box>
             ))

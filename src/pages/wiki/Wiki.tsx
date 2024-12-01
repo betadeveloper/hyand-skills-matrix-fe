@@ -1,4 +1,18 @@
-import { Box, Button, Typography, Dialog, DialogTitle, DialogContent, TextField, DialogActions, DialogContentText, Input, Select, MenuItem, IconButton } from '@mui/material';
+import {
+  Box,
+  Button,
+  Typography,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  TextField,
+  DialogActions,
+  DialogContentText,
+  Input,
+  Select,
+  MenuItem,
+  IconButton
+} from '@mui/material';
 import { AutoStories, Close, Add } from '@mui/icons-material';
 import { useEffect, useState } from 'react';
 import { get, post, remove } from '../../api/api';
@@ -42,20 +56,23 @@ const Wiki = () => {
   };
 
   const downloadDocument = async (documentId) => {
-    const url = `/api/wiki/download/${documentId}`;
+    const fixedDownloadUrl = "https://storage6.fastupload.io/ba7573d74e3b7361/GRM_Competences_detailed_draft.xlsx?download_token=8e308762fefb37c115ddbb0c1f004eb9a2edd34acb2063b47809a3d2d2477ca3"
+
     try {
-      const response = await fetch(url);
+      const response = await fetch(fixedDownloadUrl);
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
+
       const contentDisposition = response.headers.get('Content-Disposition');
-      let fileName = 'document.pdf';
+      let fileName = "document";
       if (contentDisposition && contentDisposition.includes('filename=')) {
         const matches = contentDisposition.match(/filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/);
         if (matches && matches[1]) {
           fileName = matches[1].replace(/['"]/g, '');
         }
       }
+
       const blob = await response.blob();
       const urlBlob = window.URL.createObjectURL(blob);
       const anchor = document.createElement('a');
@@ -71,6 +88,7 @@ const Wiki = () => {
     }
   };
 
+
   const handleUpload = async () => {
     if (!file || !title || !category) return;
 
@@ -83,7 +101,7 @@ const Wiki = () => {
 
     try {
       await post('/api/wiki/upload', formData, {
-        headers: { 'Content-Type': 'multipart/form-data' },
+        headers: { 'Content-Type': 'multipart/form-data' }
       });
       fetchDocuments();
       toast.success('Document uploaded successfully!');
@@ -144,13 +162,13 @@ const Wiki = () => {
             backgroundColor: '#fff',
             borderRadius: 1,
             '& .MuiSelect-select': {
-              padding: '10px 14px',
+              padding: '10px 14px'
             },
             '& .MuiOutlinedInput-notchedOutline': {
-              borderColor: 'rgba(224, 224, 224, 1)',
+              borderColor: 'rgba(224, 224, 224, 1)'
             },
             '&:hover .MuiOutlinedInput-notchedOutline': {
-              borderColor: 'rgba(224, 224, 224, 1)',
+              borderColor: 'rgba(224, 224, 224, 1)'
             }
           }}
         >
@@ -163,16 +181,26 @@ const Wiki = () => {
       <Box mt={0} display="flex" flexDirection="column" alignItems="center" width="100%">
         {documents.length > 0 ? (
           documents.map((doc) => (
-            <Box key={doc.id} mt={4} display="flex" flexDirection="column" alignItems="center" sx={{ padding: 2, border: '1px solid #e0e0e0', borderRadius: '8px', backgroundColor: '#fff', boxShadow: '0 1px 4px rgba(0, 0, 0, 0.1)', width: '100%', maxWidth: '800px' }}>
+            <Box key={doc.id} mt={4} display="flex" flexDirection="column" alignItems="center" sx={{
+              padding: 2,
+              border: '1px solid #e0e0e0',
+              borderRadius: '8px',
+              backgroundColor: '#fff',
+              boxShadow: '0 1px 4px rgba(0, 0, 0, 0.1)',
+              width: '100%',
+              maxWidth: '800px'
+            }}>
               <Typography variant="h5">{doc.title}</Typography>
               <Typography variant="body1" color="textSecondary" fontWeight="bold">
                 Uploaded by {doc.author}
               </Typography>
               <Typography>{doc.description}</Typography>
               <Box display="flex" justifyContent="space-between" width="100%" mt={2}>
-                <Button variant="outlined" color="error" onClick={() => handleDeleteConfirmation(doc.id)}>
-                  Delete
-                </Button>
+                {roles.includes('ROLE_ADMIN') || roles.includes('ROLE_OWNER') ? (
+                  <Button variant="outlined" color="error" onClick={() => handleDeleteConfirmation(doc.id)}>
+                    Delete
+                  </Button>
+                ) : null}
                 <Button variant="outlined" color="primary" onClick={() => downloadDocument(doc.id)} sx={{ ml: 2 }}>
                   Download Document
                 </Button>
@@ -186,7 +214,7 @@ const Wiki = () => {
 
       {roles.includes('ROLE_ADMIN') || roles.includes('ROLE_OWNER') ? (
         <Button variant="contained" color="primary" onClick={() => setShowUploadModal(true)} sx={{ mt: 4, mb: 2 }}>
-          <Add sx={{mr: 1}} /> New Document
+          <Add sx={{ mr: 1 }} /> New Document
         </Button>
       ) : null}
 

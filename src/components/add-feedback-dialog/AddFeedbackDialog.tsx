@@ -5,10 +5,7 @@ import {
   DialogContent,
   DialogActions,
   TextField,
-  Select,
-  MenuItem,
-  InputLabel,
-  FormControl,
+  Typography,
   IconButton,
   Button,
 } from '@mui/material';
@@ -19,30 +16,29 @@ import { post } from '../../api/api';
 interface AddFeedbackDialogProps {
   open: boolean;
   onClose: () => void;
-  employees: any[];
+  employee: any;
   ownerId: number;
   onFeedbackSubmitted: () => void;
 }
 
 const AddFeedbackDialog = ({
-                                                               open,
-                                                               onClose,
-                                                               employees,
-                                                               ownerId,
-                                                               onFeedbackSubmitted,
-                                                             }) => {
-  const [selectedEmployee, setSelectedEmployee] = useState('');
+                             open,
+                             onClose,
+                             employee,
+                             ownerId,
+                             onFeedbackSubmitted,
+                           }: AddFeedbackDialogProps) => {
   const [feedbackText, setFeedbackText] = useState('');
 
   const handleSubmitFeedback = () => {
-    if (!selectedEmployee || !feedbackText) {
-      toast.error('Please select an employee and provide feedback');
+    if (!feedbackText) {
+      toast.error('Please provide feedback');
       return;
     }
 
     const feedbackData = {
       feedbackText,
-      employeeId: selectedEmployee,
+      employeeId: employee.id,
       ownerId: ownerId,
     };
 
@@ -50,7 +46,6 @@ const AddFeedbackDialog = ({
       .then(() => {
         toast.success('Feedback submitted successfully');
         setFeedbackText('');
-        setSelectedEmployee('');
         onFeedbackSubmitted();
         onClose();
       })
@@ -73,20 +68,9 @@ const AddFeedbackDialog = ({
         </IconButton>
       </DialogTitle>
       <DialogContent>
-        <FormControl fullWidth sx={{ mb: 2 }}>
-          <InputLabel>Employee</InputLabel>
-          <Select
-            value={selectedEmployee}
-            onChange={(e) => setSelectedEmployee(e.target.value)}
-            label="Employee"
-          >
-            {employees.map((employee) => (
-              <MenuItem key={employee.id} value={employee.id}>
-                {employee.firstName} {employee.lastName}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
+        <Typography variant="h6" sx={{ mb: 2 }}>
+          Employee: {employee.firstName} {employee.lastName}
+        </Typography>
 
         <TextField
           label="Feedback"

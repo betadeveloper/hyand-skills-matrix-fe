@@ -25,21 +25,13 @@ const ReviewPortal = () => {
   const [openFeedbackDialog, setOpenFeedbackDialog] = useState(false);
   const [openConfirmationDialog, setOpenConfirmationDialog] = useState(false);
   const [confirmationAction, setConfirmationAction] = useState('');
-  const [employees, setEmployees] = useState([]);
+  const [employee, setEmployee] = useState(null);
   const [ownerId, setOwnerId] = useState(null);
 
   const navigate = useNavigate();
 
   useEffect(() => {
     fetchReviews();
-
-    get('http://localhost:8080/api/owners/currentOwner/employees')
-      .then((response: any) => {
-        setEmployees(response);
-      })
-      .catch((err) => {
-        console.error('Error fetching employees:', err);
-      });
 
     get('http://localhost:8080/api/employee/current').then((response) => {
       setOwnerId(response.id);
@@ -71,7 +63,9 @@ const ReviewPortal = () => {
   };
 
   const handleAction = async (reviewId, action) => {
+    const selectedReview = reviews.find((review) => review.id === reviewId);
     setSelectedReviewId(reviewId);
+    setEmployee(selectedReview?.employee || null);
     setConfirmationAction(action);
 
     if (checkboxStates[reviewId]) {
@@ -80,6 +74,7 @@ const ReviewPortal = () => {
       setOpenConfirmationDialog(true);
     }
   };
+
 
   const handleConfirmAction = async () => {
     try {
@@ -197,7 +192,7 @@ const ReviewPortal = () => {
           open={openFeedbackDialog}
           onClose={() => setOpenFeedbackDialog(false)}
           onFeedbackSubmitted={handleFeedbackSubmit}
-          employees={employees}
+          employee={employee}
           ownerId={ownerId}
         />
       )}

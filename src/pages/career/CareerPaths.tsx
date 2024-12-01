@@ -199,7 +199,6 @@ const CareerPaths = () => {
     setIsCreateSkillVisible(false);
   };
 
-
   const handleDeleteSkill = (id: number) => {
     remove(`http://localhost:8080/api/skills/${id}`).then(() => {
       setSkills(skills.filter(skill => skill.id !== id));
@@ -335,13 +334,13 @@ const CareerPaths = () => {
             Employees:
           </Typography>
 
-          {assignedEmployees.length === 0 ? (
+          {assignedEmployees && assignedEmployees.length === 0 ? (
             <Typography variant="body1" color="textSecondary" align="center">
               No employees assigned yet.
             </Typography>
           ) : (
             <List>
-              {assignedEmployees.map((employee) => (
+              {assignedEmployees && assignedEmployees.map((employee) => (
                 <ListItem key={employee.id} style={{ borderBottom: '1px solid #ddd' }}>
                   <ListItemText primary={`${employee.firstName} ${employee.lastName}`} />
                 </ListItem>
@@ -402,14 +401,6 @@ const CareerPaths = () => {
                 margin="normal"
                 multiline
                 rows={2}
-              />
-              <TextField
-                label="Proficiency"
-                value={newSkill.proficiency}
-                onChange={(e) => setNewSkill({ ...newSkill, proficiency: Number(e.target.value) })}
-                fullWidth
-                margin="normal"
-                type="number"
               />
               <TextField
                 label="Weight"

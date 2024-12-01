@@ -111,13 +111,14 @@ const Career = () => {
       setOwners(response);
     });
 
-    get('http://localhost:8080/api/skills/1').then((response: Skill[]) => {
-      setSkills(response);
-    });
-
-    get('http://localhost:8080/api/careerPaths/current').then().then((response: any) => {
+    get('http://localhost:8080/api/careerPaths/current').then((response: CareerPath) => {
       setCareerPath(response);
-      console.log(response);
+
+      if (response && response.id) {
+        get(`http://localhost:8080/api/skills/${response.id}`).then((skillsResponse: Skill[]) => {
+          setSkills(skillsResponse);
+        });
+      }
     });
   }, []);
 

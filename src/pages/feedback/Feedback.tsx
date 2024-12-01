@@ -2,22 +2,11 @@ import React, { useEffect, useState } from 'react';
 import { Box, Button, Typography } from '@mui/material';
 import { InsertComment } from '@mui/icons-material';
 import { get } from '../../api/api';
-import AddFeedbackDialog from '../../components/add-feedback-dialog/AddFeedbackDialog.tsx';
 
 const Feedback = () => {
   const [feedback, setFeedback] = useState<any[]>([]);
   const [error, setError] = useState<string | null>(null);
-  const [openDialog, setOpenDialog] = useState(false);
-  const [employees, setEmployees] = useState<any[]>([]);
   const [roles, setRoles] = useState<any[]>([]);
-  const [ownerId, setOwnerId] = useState();
-
-  useEffect(() => {
-    get('http://localhost:8080/api/employee/current').then((response) => {
-      setRoles(response.roles || []);
-      setOwnerId(response.id);
-    });
-  }, []);
 
   useEffect(() => {
     localStorage.setItem('selectedNavItem', 'Feedback');
@@ -29,15 +18,6 @@ const Feedback = () => {
       .catch((err) => {
         console.error('Error fetching feedback:', err);
         setError('Failed to load feedback');
-      });
-
-    get('http://localhost:8080/api/owners/currentOwner/employees')
-      .then((response: any) => {
-        setEmployees(response);
-      })
-      .catch((err) => {
-        console.error('Error fetching employees:', err);
-        setError('Failed to load employees');
       });
   }, []);
 
@@ -102,13 +82,6 @@ const Feedback = () => {
         </Button>
       )}
 
-      <AddFeedbackDialog
-        open={openDialog}
-        onClose={() => setOpenDialog(false)}
-        employees={employees}
-        ownerId={ownerId}
-        onFeedbackSubmitted={refreshFeedback}
-      />
     </Box>
   );
 };

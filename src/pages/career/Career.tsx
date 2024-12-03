@@ -21,6 +21,7 @@ import { Link } from 'react-router-dom';
 import { Endpoint } from '../../routes/endpoint.tsx';
 
 import { Add } from '@mui/icons-material/';
+import CareerLevelRequirements from './CareerLevelRequirements.tsx';
 
 
 const Career = () => {
@@ -237,9 +238,15 @@ const Career = () => {
               <Add sx={{ mr: 1 }} />Add New Career Paths
             </Button>
           ) : null}
+          <Box position="absolute" right={0} top={55}>
+          <Link to="/career-level-requirements" style={{ textDecoration: 'none' }}>
+            <Button variant="outlined" sx={{width: '235px'}}>View Career Level Requirements</Button>
+          </Link>
+          </Box>
         </Box>
       </Box>
-      {careerPath && (
+
+      {careerPath ? (
         <Box display="flex" flexDirection="column" alignItems="center" mt={3}>
           <Typography variant="h4" mt={3} mb={2}>
             Skills for <b>{careerPath.name}</b> Career Path
@@ -261,19 +268,19 @@ const Career = () => {
                   <MenuItem value={0} disabled title="Select a proficiency level">
                     Select proficiency
                   </MenuItem>
-                  <MenuItem value={1} title="Basic understanding of the skill">
+                  <MenuItem value={1} title="Able to convey basic ideas and instructions">
                     Beginner
                   </MenuItem>
-                  <MenuItem value={2} title="Some experience with the skill, but still learning">
+                  <MenuItem value={2} title="Demonstrating structured and detailed understanding">
                     Medium
                   </MenuItem>
-                  <MenuItem value={3} title="Proficient in the skill, with some experience">
+                  <MenuItem value={3} title="Proficient in the skill, able to perform complex tasks, mentor others">
                     Advanced
                   </MenuItem>
-                  <MenuItem value={4} title="Highly skilled, with extensive experience">
+                  <MenuItem value={4} title="Highly skilled, with extensive experience, can take leadership, solving very complex problems">
                     Master
                   </MenuItem>
-                  <MenuItem value={5} title="Expert-level skills, with deep understanding">
+                  <MenuItem value={5} title="Deep understanding, expert in the field, can solve super complex problems, consult others">
                     Expert
                   </MenuItem>
                 </Select>
@@ -282,7 +289,13 @@ const Career = () => {
           ) : (
             <Typography>No skills available for this career path</Typography>
           )}
+        </Box>
+      ) : (
+        <Typography sx={{textAlign: 'center', mt: 3, fontSize: '24px'}}>No career path available</Typography>
+      )}
 
+      {careerPath && (
+        <Box display="flex" flexDirection="column" alignItems="center" mt={3}>
           {skills.length > 0 && (
             <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '400px' }}>
               <Button

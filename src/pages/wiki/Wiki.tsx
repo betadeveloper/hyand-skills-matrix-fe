@@ -56,23 +56,21 @@ const Wiki = () => {
   };
 
   const downloadDocument = async (documentId) => {
-    const fixedDownloadUrl = "https://storage6.fastupload.io/ba7573d74e3b7361/GRM_Competences_detailed_draft.xlsx?download_token=8e308762fefb37c115ddbb0c1f004eb9a2edd34acb2063b47809a3d2d2477ca3"
-
+    const url = `/api/wiki/download/${documentId}`;
     try {
-      const response = await fetch(fixedDownloadUrl);
+      const response = await fetch(url);
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
-
       const contentDisposition = response.headers.get('Content-Disposition');
-      let fileName = "document";
+      console.log(response);
+      let fileName = "test";
       if (contentDisposition && contentDisposition.includes('filename=')) {
         const matches = contentDisposition.match(/filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/);
         if (matches && matches[1]) {
           fileName = matches[1].replace(/['"]/g, '');
         }
       }
-
       const blob = await response.blob();
       const urlBlob = window.URL.createObjectURL(blob);
       const anchor = document.createElement('a');
@@ -87,7 +85,6 @@ const Wiki = () => {
       toast.error('Error downloading document!');
     }
   };
-
 
   const handleUpload = async () => {
     if (!file || !title || !category) return;

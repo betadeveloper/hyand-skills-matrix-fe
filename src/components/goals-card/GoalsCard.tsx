@@ -118,7 +118,6 @@ const GoalsCard = () => {
         ))}
       </Box>
 
-      {/* New button for viewing goal details */}
       <Box display="flex" justifyContent="flex-end" mt={2}>
         <Link to="/goals" style={{ textDecoration: 'none' }}>
           <Button variant="outlined">View Goal Details</Button>

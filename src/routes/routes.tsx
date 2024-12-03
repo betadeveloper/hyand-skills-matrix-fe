@@ -20,6 +20,7 @@ import Tos from '../pages/tos/Tos.tsx';
 import CareerPaths from '../pages/career/CareerPaths.tsx';
 import ReviewPortal from '../pages/review-portal/ReviewPortal.tsx';
 import FinishedReviews from '../pages/review-portal/finished-reviews/FinishedReviews.tsx';
+import CareerLevelRequirements from '../pages/career/CareerLevelRequirements.tsx';
 
 type MyErrorBoundaryProps = {
   children: React.ReactNode;
@@ -115,6 +116,10 @@ const routeOptions: RouteObject[] = [
       {
         path: Endpoint.FINISHED_REVIEWS,
         element: <ProtectedRoute path={Endpoint.FINISHED_REVIEWS} element={<FinishedReviews />} />
+      },
+      {
+        path: Endpoint.CAREER_LEVEL_REQUIREMENTS,
+        element: <ProtectedRoute path={Endpoint.CAREER_LEVEL_REQUIREMENTS} element={<CareerLevelRequirements />} />
       }
     ]
   },

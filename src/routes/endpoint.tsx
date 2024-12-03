@@ -13,4 +13,5 @@ export enum Endpoint {
   CAREER_PATHS = 'career-paths',
   REVIEW_PORTAL = 'review-portal',
   FINISHED_REVIEWS = 'finished-reviews',
+  CAREER_LEVEL_REQUIREMENTS = 'career-level-requirements',
 }

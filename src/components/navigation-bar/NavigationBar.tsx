@@ -15,19 +15,21 @@ export default function NavigationBar() {
   const [drawerOpen, setDrawerOpen] = React.useState(false);
   const [selectedNavItem, setSelectedNavItem] = React.useState<string>('');
   const [loggedInUser, setLoggedInUser] = React.useState<string>('');
+  const [roles, setRoles] = React.useState<string[]>([]); // Track user roles
 
   const handleNavItemClick = (navItem: string) => {
     setSelectedNavItem(navItem);
     localStorage.setItem('selectedNavItem', navItem);
   };
-  
+
   React.useEffect(() => {
     get('http://localhost:8080/api/employee/current')
       .then((response: any) => {
         setLoggedInUser(`${response.firstName} ${response.lastName}`);
+        setRoles(response.roles || []); // Assuming roles are part of the response
       });
-  
-    const storedNavItem = localStorage.getItem('selectedNavItem'); 
+
+    const storedNavItem = localStorage.getItem('selectedNavItem');
     if (storedNavItem) {
       setSelectedNavItem(storedNavItem);
     }
@@ -39,7 +41,9 @@ export default function NavigationBar() {
     { to: Endpoint.CAREER, icon: <AssignmentInd sx={{ color: 'black' }} />, text: 'Career' },
     { to: Endpoint.FEEDBACK, icon: <InsertComment sx={{ color: 'black' }} />, text: 'Feedback' },
     { to: Endpoint.WIKI, icon: <AutoStories sx={{ color: 'black' }} />, text: 'Wiki' },
-    { to: Endpoint.REVIEW_PORTAL, icon: <Assistant sx={{ color: 'black' }} />, text: 'Review Portal' },
+    ...(roles.includes('ROLE_ADMIN') || roles.includes('ROLE_OWNER')
+      ? [{ to: Endpoint.REVIEW_PORTAL, icon: <Assistant sx={{ color: 'black' }} />, text: 'Review Portal' }]
+      : []),
   ];
 
   const handleMenu = (event: React.MouseEvent<HTMLElement>) => {

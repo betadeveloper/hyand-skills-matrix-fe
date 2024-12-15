@@ -21,7 +21,6 @@ import { Link } from 'react-router-dom';
 import { Endpoint } from '../../routes/endpoint.tsx';
 
 import { Add } from '@mui/icons-material/';
-import CareerLevelRequirements from './CareerLevelRequirements.tsx';
 
 
 const Career = () => {
@@ -240,7 +239,7 @@ const Career = () => {
           ) : null}
           <Box position="absolute" right={0} top={55}>
           <Link to="/career-level-requirements" style={{ textDecoration: 'none' }}>
-            <Button variant="outlined" sx={{width: '235px'}}>View Career Level Requirements</Button>
+            <Button variant="outlined" sx={{width: '235px'}}>View Career Level Expectations</Button>
           </Link>
           </Box>
         </Box>

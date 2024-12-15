@@ -1,7 +1,8 @@
 import { Box, Typography } from '@mui/material';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar, Tooltip, Legend } from 'recharts';
 import TrackChangesIcon from '@mui/icons-material/TrackChanges';
+import { get } from '../../api/api.ts';
 
 const Statistics = () => {
   // TODO: get from career path skills
@@ -17,8 +18,16 @@ const Statistics = () => {
     { subject: 'Creativity', A: 80, B: 85 }
   ];
 
+  const [firstName, setFirstName] = useState();
+  const [lastName, setLastName] = useState();
+
   useEffect(() => {
     localStorage.setItem('selectedNavItem', 'Statistics');
+
+    get('http://localhost:8080/api/employee/current').then((response) => {
+      setFirstName(response.firstName);
+      setLastName(response.lastName);
+    });
   }, []);
 
   return (
@@ -31,7 +40,7 @@ const Statistics = () => {
         <PolarGrid />
         <PolarAngleAxis dataKey="subject" />
         <PolarRadiusAxis angle={30} domain={[0, 150]} />
-        <Radar name="Raigardas Tautkus" dataKey="A" stroke="#0092E1" fill="#0092E1" fillOpacity={0.6} />
+        <Radar name={`${firstName} ${lastName}`} dataKey="A" stroke="#0092E1" fill="#0092E1" fillOpacity={0.6} />
         <Tooltip />
         <Legend />
       </RadarChart>

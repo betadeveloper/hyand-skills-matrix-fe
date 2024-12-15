@@ -105,7 +105,7 @@ const GoalsCard = () => {
       <Box flexGrow={1}>
         {goals.map((goal) => (
           <Box key={goal.id} display={'flex'} alignItems={'center'} mb={1}>
-            <Typography fontWeight={500}>{goal.name}</Typography>
+            <Typography flex={1} fontWeight={500}>{goal.name}</Typography>
             <Typography fontWeight={400} ml={'auto'}>{goal.dueDate}</Typography>
             <Button
               onClick={() => openDeleteDialog(goal)}

@@ -21,7 +21,7 @@ import {
   DialogContentText,
   DialogTitle
 } from '@mui/material';
-import { Add, Close, ArrowBack, Delete } from '@mui/icons-material';
+import { Add, ArrowBack, Delete } from '@mui/icons-material';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -104,9 +104,9 @@ const CareerPaths = () => {
   };
 
   const getCareerPathEmployees = (id: number) => {
-    get(`http://localhost:8080/api/careerPaths/${id}/employees`).then((response) => {
+    get(`http://localhost:8080/api/careerPaths/${id}/employees`).then((response: any) => {
       setAssignedEmployees(response);
-      setSelectedEmployees(response.map((employee) => employee.id));
+      setSelectedEmployees(response.map((employee: { id: any; }) => employee.id));
     });
   }
 
@@ -128,7 +128,7 @@ const CareerPaths = () => {
     setShowInputs(false);
   };
 
-  const handleOpenAssignEmployeeModal = (id) => {
+  const handleOpenAssignEmployeeModal = (id: number) => {
     getCareerPathEmployees(id);
     setSelectedCareerPathId(id);
     setAssignEmployeeModalOpen(true);
@@ -175,6 +175,7 @@ const CareerPaths = () => {
 
     put(`http://localhost:8080/api/careerPaths/${selectedCareerPathId}/assignEmployees`, selectedEmployees)
       .then((response) => {
+        // @ts-ignore
         setAssignedEmployees(response.employees);
         toast.success('Employees assigned successfully!');
         handleCloseAssignEmployeeModal();
@@ -205,15 +206,6 @@ const CareerPaths = () => {
       toast.success('Skill deleted successfully!');
     });
   };
-
-  const handleUpdateSkill = (id: number) => {
-    put(`http://localhost:8080/api/skills/${id}`, newSkill).then((response: any) => {
-      setSkills(skills.map(skill => (skill.id === id ? response : skill)));
-      setNewSkill({ id: 0, name: '', description: '', proficiency: 0, weight: 0 });
-      toast.success('Skill updated successfully!');
-    });
-  };
-
   const handleGoBack = () => {
     navigate('/career');
   };
@@ -302,7 +294,7 @@ const CareerPaths = () => {
           </Typography>
           <List>
             {employees.map((employee) => (
-              <ListItem key={employee.id} button onClick={() => handleToggleEmployee(employee.id)}>
+              <ListItem key={employee.id} onClick={() => handleToggleEmployee(employee.id)}>
                 <ListItemIcon>
                   <Checkbox checked={selectedEmployees.includes(employee.id)} />
                 </ListItemIcon>

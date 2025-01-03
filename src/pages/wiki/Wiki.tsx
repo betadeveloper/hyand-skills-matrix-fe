@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { get } from '../../api/api.ts';
@@ -9,12 +9,12 @@ const Wiki = () => {
   const [files, setFiles] = useState([]);
   const [openDialog, setOpenDialog] = useState(false);
   const [fileIndexToDelete, setFileIndexToDelete] = useState(null);
-  const [roles, setRoles] = useState([]);
+  const [roles, setRoles] = useState<string[]>([]);
   const [customName, setCustomName] = useState('');
   const [showUpload, setShowUpload] = useState(false);
 
   useEffect(() => {
-    get('http://localhost:8080/api/employee/current').then((response) => {
+    get('http://localhost:8080/api/employee/current').then((response: any) => {
       setRoles(response.roles);
     });
 
@@ -22,12 +22,12 @@ const Wiki = () => {
     setFiles(savedFiles);
   }, []);
 
-  const saveFilesToLocalStorage = (updatedFiles) => {
+  const saveFilesToLocalStorage = (updatedFiles: any) => {
     localStorage.setItem("files", JSON.stringify(updatedFiles));
   };
 
-  const handleFileUpload = (event) => {
-    const uploadedFiles = Array.from(event.target.files).map((file) => {
+  const handleFileUpload = (event: any) => {
+    const uploadedFiles = Array.from(event.target.files).map((file: any) => {
       const maxSize = 20 * 1024 * 1024; // 20MB
       const allowedTypes = ['application/pdf', 'image/jpeg', 'image/png', 'text/plain', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'application/vnd.ms-excel', 'text/csv'];
 
@@ -57,8 +57,8 @@ const Wiki = () => {
     }).filter(Boolean);
 
     Promise.all(uploadedFiles)
-      .then((newFiles) => {
-        const mergedFiles = [...files, ...newFiles];
+      .then((newFiles: any) => {
+        const mergedFiles: any = [...files, ...newFiles];
         setFiles(mergedFiles);
         saveFilesToLocalStorage(mergedFiles);
         toast.success("Files uploaded successfully!");
@@ -67,14 +67,14 @@ const Wiki = () => {
       })
   };
 
-  const handleFileDownload = (file) => {
+  const handleFileDownload = (file: any) => {
     const link = document.createElement("a");
     link.href = file.content;
     link.download = file.name;
     link.click();
   };
 
-  const handleFileDelete = (fileIndex) => {
+  const handleFileDelete = (fileIndex: any) => {
     setFileIndexToDelete(fileIndex);
     setOpenDialog(true);
   };
@@ -178,7 +178,7 @@ const Wiki = () => {
           <Typography>No files uploaded yet.</Typography>
         ) : (
           <ul style={{ padding: 0, listStyle: "none" }}>
-            {files.map((file, index) => (
+            {files.map((file: any, index: number) => (
               <li
                 key={index}
                 style={{

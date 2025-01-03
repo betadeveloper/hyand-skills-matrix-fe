@@ -14,7 +14,7 @@ const Goals = () => {
   const fetchGoals = async () => {
     setLoading(true);
     try {
-      const response = await get('http://localhost:8080/api/goals/currentEmployee');
+      const response: any = await get('http://localhost:8080/api/goals/currentEmployee');
       setGoals(response);
     } catch (error) {
       console.error("Error fetching goals:", error);
@@ -23,7 +23,8 @@ const Goals = () => {
     }
   };
 
-  const handleStartGoal = async (goal) => {
+
+  const handleStartGoal = async (goal: any) => {
     const currentDate = new Date().toISOString();
     const updatedGoal = { ...goal, startDate: currentDate };
     try {
@@ -34,7 +35,7 @@ const Goals = () => {
     }
   };
 
-  const handleEndGoal = async (goal) => {
+  const handleEndGoal = async (goal: any) => {
     const currentDate = new Date().toISOString();
     const updatedGoal = { ...goal, endDate: currentDate };
     try {
@@ -63,7 +64,7 @@ const Goals = () => {
       {loading ? (
         <CircularProgress />
       ) : (
-        goals.map((goal, index) => (
+        goals.map((goal: any, index: number) => (
           <Card
             key={goal.id}
             variant="outlined"

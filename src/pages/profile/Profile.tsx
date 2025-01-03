@@ -111,7 +111,7 @@ const Profile = () => {
               onChange={(e) => setFirstName(e.target.value)}
               fullWidth
               sx={{ mb: 2 }}
-              error={firstName && (firstName.length < 2 || firstName.length > 50)}
+              error={!!(firstName && (firstName.length < 2 || firstName.length > 50))}
               helperText={
                 firstName &&
                 (firstName.length < 3

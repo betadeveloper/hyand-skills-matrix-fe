@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Box, Button, Typography } from '@mui/material';
 import { InsertComment } from '@mui/icons-material';
 import { get } from '../../api/api';
@@ -6,7 +6,7 @@ import { get } from '../../api/api';
 const Feedback = () => {
   const [feedback, setFeedback] = useState<any[]>([]);
   const [error, setError] = useState<string | null>(null);
-  const [roles, setRoles] = useState<any[]>([]);
+  const [roles] = useState<any[]>([]);
 
   useEffect(() => {
     localStorage.setItem('selectedNavItem', 'Feedback');
@@ -20,13 +20,6 @@ const Feedback = () => {
         setError('Failed to load feedback');
       });
   }, []);
-
-  const refreshFeedback = () => {
-    get('http://localhost:8080/api/feedback/currentEmployee')
-      .then((response) => setFeedback(response))
-      .catch((err) => console.error('Error refreshing feedback:', err));
-  };
-
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
     return new Intl.DateTimeFormat('en-US', {
@@ -77,7 +70,7 @@ const Feedback = () => {
       )}
 
       {roles.includes('ROLE_ADMIN') && (
-        <Button variant="contained" color="primary" onClick={() => setOpenDialog(true)} sx={{ mt: 3 }}>
+        <Button variant="contained" color="primary" sx={{ mt: 3 }}>
           Give Feedback
         </Button>
       )}
